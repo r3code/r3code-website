@@ -1,0 +1,173 @@
+---
+/**
+ * /privacy/ — Privacy policy page.
+ *
+ * Adapted from savinmi.ru/privacy/ structure (Mikhail Savin @jtprogru),
+ * customized for Dmitry Sinyavsky (r3code) — SRE consulting, self-employed.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { CONTACTS, withBase } from '../consts';
+
+const title = 'Приватность — r3code.ru';
+const description =
+  'Политика приватности сайта r3code.ru. Статический сайт без серверной части, форм и личных кабинетов. Используется Яндекс.Метрика для агрегированной статистики посещаемости.';
+---
+
+<BaseLayout title={title} description={description}>
+  <article class="section privacy">
+    <div class="container privacy__inner">
+      <a href={withBase('')} class="privacy__back">
+        <span aria-hidden="true">←</span> На главную
+      </a>
+
+      <header class="privacy__head">
+        <h1>Приватность</h1>
+      </header>
+
+      <section class="privacy__section">
+        <p>
+          Этот сайт — статический. На нём нет личных кабинетов, корзин и форм
+          обратной связи. Серверной части тоже нет, страницы отдаются через
+          <a href="https://pages.github.com/" target="_blank" rel="noopener">GitHub Pages</a>.
+          Все способы связи со мной — в футере и на странице «Обо мне».
+        </p>
+        <p>
+          Сайт принадлежит Дмитрию Синявскому (самозанятый). Если ты что-то
+          читаешь здесь — ты гость, и я хочу, чтобы ты знал, что собирается,
+          а что нет.
+        </p>
+      </section>
+
+      <section class="privacy__section">
+        <h2>Что собирается</h2>
+        <p>
+          Подключена
+          <a href="https://metrika.yandex.ru/" target="_blank" rel="noopener">Яндекс.Метрика</a>
+          (ID счётчика: 114133983). Она собирает:
+        </p>
+        <ul class="privacy__list">
+          <li>Агрегированную посещаемость (просмотры страниц)</li>
+          <li>IP-адрес (агрегированно, не идентифицирует личность)</li>
+          <li>User-Agent (тип браузера и ОС)</li>
+          <li>Язык браузера</li>
+          <li>Источник перехода (referrer)</li>
+          <li>Карта кликов (clickmap)</li>
+        </ul>
+        <p>
+          Личность посетителей <strong>не идентифицируется</strong>. Я вижу
+          обезличенные агрегаты: «за день пришло N человек с такого-то
+          источника, посмотрели такие-то страницы».
+        </p>
+      </section>
+
+      <section class="privacy__section">
+        <h2>Что НЕ собирается</h2>
+        <ul class="privacy__list">
+          <li>
+            <strong>Webvisor отключён</strong> — действия на странице не
+            записываются, никто не «пересматривает» твою сессию.
+          </li>
+          <li>Сторонних трекеров нет. Никакого Google Analytics, Facebook Pixel, рекламных сетей.</li>
+          <li>Данные не передаются третьим лицам, кроме Яндекса как поставщика Метрики.</li>
+          <li>Используются только cookies от Яндекс.Метрики.</li>
+        </ul>
+      </section>
+
+      <section class="privacy__section">
+        <h2>Как отключить</h2>
+        <p>Если не хочешь, чтобы Метрика считала твой визит:</p>
+        <ul class="privacy__list">
+          <li>
+            Поставь блокировщик трекеров:
+            <a href="https://github.com/gorhill/uBlock" target="_blank" rel="noopener">uBlock Origin</a>,
+            AdBlock или
+            <a href="https://brave.com/shields/" target="_blank" rel="noopener">Brave Shields</a>.
+            Они по умолчанию режут Яндекс.Метрику.
+          </li>
+          <li>Используй режим инкогнито в браузере.</li>
+          <li>Отключи JavaScript в браузере — счётчик не загрузится.</li>
+          <li>
+            <a href="https://yandex.ru/support/metrica/general/opt-out.html" target="_blank" rel="noopener">Справка Яндекса</a>
+            по отключению Метрики.
+          </li>
+        </ul>
+      </section>
+
+      <section class="privacy__section">
+        <h2>Если у тебя есть вопросы</h2>
+        <p>
+          Напиши мне в
+          <a href={CONTACTS.telegramUrl} target="_blank" rel="noopener">Telegram @{CONTACTS.telegram}</a>
+          или на
+          <a href={`mailto:${CONTACTS.email}`}>{CONTACTS.email}</a>.
+          Отвечаю в течение 24 часов.
+        </p>
+      </section>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .privacy__inner {
+    max-width: 760px;
+  }
+
+  .privacy__back {
+    display: inline-block;
+    margin-bottom: 2rem;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+
+  .privacy__back:hover {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  .privacy__head {
+    margin-bottom: 2.5rem;
+  }
+
+  .privacy__head h1 {
+    font-size: clamp(1.9rem, 2vw + 1rem, 2.5rem);
+    margin: 0;
+  }
+
+  .privacy__section {
+    margin-bottom: 2rem;
+  }
+
+  .privacy__section:last-child {
+    margin-bottom: 0;
+  }
+
+  .privacy__section h2 {
+    font-size: 1.25rem;
+    margin-bottom: 0.85rem;
+    color: var(--color-text);
+  }
+
+  .privacy__section p {
+    color: var(--color-text-secondary);
+    font-size: 1.02rem;
+    line-height: 1.65;
+    margin-bottom: 0.85rem;
+  }
+
+  .privacy__list {
+    margin: 0 0 1rem;
+    padding-left: 1.5rem;
+  }
+
+  .privacy__list li {
+    color: var(--color-text-secondary);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 0.4rem;
+  }
+
+  .privacy__list a {
+    font-weight: 500;
+  }
+</style>

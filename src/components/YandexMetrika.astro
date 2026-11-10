@@ -1,0 +1,53 @@
+---
+/**
+ * YandexMetrika — counter snippet + reachGoal helper.
+ *
+ * Renders ONLY in production (import.meta.env.PROD) to avoid polluting
+ * stats with local dev/preview views.
+ *
+ * Counter ID: 114133983
+ * Config: ssr, clickmap, accurateTrackBounce, trackLinks. Webvisor is
+ * disabled (per user request — same as reference site savinmi.ru/privacy).
+ *
+ * Also exposes a global `reachGoal(goalId)` helper that other components
+ * can call via onclick handlers. Safe to call when ym() is not yet
+ * loaded (queued via m[i].a array) or when Metrika is blocked (uBlock)
+ * — in the latter case the call is a no-op, no exceptions thrown.
+ */
+const isProd = import.meta.env.PROD;
+const METRIKA_ID = '114133983';
+---
+
+{isProd && (
+  <>
+    {/* Yandex.Metrika counter */}
+    <script type="text/javascript" set:html={`
+      (function(m,e,t,r,i,k,a){
+          m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+          m[i].l=1*new Date();
+          for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+          k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+      })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=${METRIKA_ID}', 'ym');
+
+      ym(${METRIKA_ID}, 'init', {ssr:true, clickmap:true, referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+
+      // Global reachGoal helper — safe to call before ym loads or if blocked.
+      window.reachGoal = function(goalId) {
+        try {
+          if (typeof window.ym === 'function') {
+            window.ym(${METRIKA_ID}, 'reachGoal', goalId);
+          }
+        } catch (e) {
+          // Metrika blocked or failed to load — silent no-op.
+        }
+        return true; // Allow default link navigation to proceed.
+      };
+    `} />
+    <noscript>
+      <div>
+        <img src="https://mc.yandex.ru/watch/${METRIKA_ID}" style="position:absolute; left:-9999px;" alt="" />
+      </div>
+    </noscript>
+    {/* /Yandex.Metrika counter */}
+  </>
+)}

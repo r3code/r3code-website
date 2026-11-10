@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>OG image source — r3code.ru</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 1200px;
+    height: 630px;
+    overflow: hidden;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  body {
+    display: flex;
+    background: #1a1a2e;
+  }
+
+  /* === Left: photo (600px, preprocessed to 600x630) === */
+  .photo-side {
+    position: relative;
+    width: 600px;
+    height: 630px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .photo-side img {
+    width: 600px;
+    height: 630px;
+    object-fit: contain;
+    display: block;
+  }
+
+  /* Gradient mask on right edge of photo — smooth blend into dark bg */
+  .photo-side::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      transparent 70%,
+      rgba(26, 26, 46, 0.4) 85%,
+      #1a1a2e 100%
+    );
+    pointer-events: none;
+  }
+
+  /* === Right: text (600px) === */
+  .text-side {
+    position: relative;
+    width: 600px;
+    height: 630px;
+    padding: 70px 60px 50px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: #1a1a2e;
+  }
+
+  /* Vertical accent line on left edge of text */
+  .text-side::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 80px;
+    bottom: 80px;
+    width: 4px;
+    background: #2563eb;
+  }
+
+  .divider {
+    width: 200px;
+    height: 1px;
+    background: #334155;
+    margin: 12px 0 20px;
+  }
+
+  .author {
+    font-family: 'Inter', sans-serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: #9ca3af;
+    letter-spacing: -0.01em;
+  }
+
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 24px;
+    font-weight: 400;
+    color: #38bdf8;
+    letter-spacing: 0.04em;
+    margin-bottom: 28px;
+  }
+
+  .headline {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 48px;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+  }
+
+  .headline-gap {
+    margin-bottom: 4px;
+  }
+
+  .accent-line {
+    font-family: 'Inter', sans-serif;
+    font-size: 48px;
+    font-weight: 600;
+    color: #2563eb;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin: 8px 0 8px;
+  }
+
+  .subhead {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 20px;
+    font-weight: 400;
+    color: #9ca3af;
+    letter-spacing: 0.01em;
+    margin-top: 28px;
+  }
+</style>
+</head>
+<body>
+  <div class="photo-side">
+    <img src="file:///tmp/og-photo.jpg" alt="Дмитрий Синявский" />
+  </div>
+
+  <div class="text-side">
+    <div class="author">Дмитрий Синявский</div>
+    <div class="divider"></div>
+
+    <div class="eyebrow">~/R3CODE $ SRE · OBSERVABILITY</div>
+
+    <div class="headline headline-gap">КЕЙСЫ И ОПЫТ</div>
+    <div class="headline headline-gap">ВНЕДРЕНИЯ SRE</div>
+
+    <div class="accent-line">От сокращения затрат на логи в 3–5 раз</div>
+
+    <div class="headline">до AI-Ready Observability</div>
+
+    <div class="subhead">→ Доклады · Шаблоны · Open-source</div>
+  </div>
+</body>
+</html>

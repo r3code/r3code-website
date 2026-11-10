@@ -1,0 +1,166 @@
+---
+/**
+ * SocialProof — conferences + PC memberships only.
+ * Community channels and companies moved to separate Community.astro block.
+ */
+import { CONFERENCES, PC_MEMBERSHIPS, withBase } from '../consts';
+---
+
+<section class="section section--subtle social-proof" aria-labelledby="social-proof-title">
+  <div class="container">
+    <div class="section__head section__head--center">
+      <h2 id="social-proof-title">Экспертиза, подтверждённая высокими оценками на ИТ-конференциях</h2>
+    </div>
+
+    <ul class="badge-grid">
+      {
+        CONFERENCES.map((conf) => (
+          <li class="badge">
+            <a
+              class="badge__link"
+              href={withBase(`talks/${conf.latestTalkSlug}/`)}
+              aria-label={`${conf.name} — открыть последний доклад`}
+            >
+              <span class="badge__name">{conf.name}</span>
+              {conf.note && <span class="badge__note">{conf.note}</span>}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    {
+      PC_MEMBERSHIPS.length > 0 && (
+        <div class="pc-memberships">
+          <p class="pc-memberships__title">Член программных комитетов:</p>
+          <ul class="pc-list">
+            {PC_MEMBERSHIPS.map((pc) => (
+              <li class="pc-item">
+                <a href={pc.url} target="_blank" rel="noopener" class="pc-item__link">
+                  <span class="pc-item__name">{pc.conference}</span>
+                  <span class="pc-item__since">с {pc.since}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .badge-grid {
+    list-style: none;
+    margin: 0 0 2.5rem;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .badge {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    transition: border-color var(--t-fast), transform var(--t-fast);
+  }
+
+  .badge:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-2px);
+  }
+
+  .badge__link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.85rem 1rem;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .badge__link:hover {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .badge__name {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--color-text);
+  }
+
+  .badge__note {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--color-accent);
+  }
+
+  .pc-memberships {
+    text-align: center;
+  }
+
+  .pc-memberships__title {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+    margin-bottom: 1rem;
+  }
+
+  .pc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+
+  .pc-item__link {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: var(--color-bg);
+    border: 1px solid var(--color-accent-border);
+    border-radius: var(--radius);
+    text-decoration: none;
+    transition: background var(--t-fast), color var(--t-fast);
+  }
+
+  .pc-item__link:hover {
+    background: var(--color-accent);
+    text-decoration: none;
+  }
+
+  .pc-item__link:hover .pc-item__name,
+  .pc-item__link:hover .pc-item__since {
+    color: #fff;
+  }
+
+  .pc-item__name {
+    font-weight: 600;
+    color: var(--color-accent);
+  }
+
+  .pc-item__since {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--color-text-muted);
+  }
+
+  @media (max-width: 540px) {
+    .pc-list {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .pc-item__link {
+      justify-content: center;
+    }
+  }
+</style>

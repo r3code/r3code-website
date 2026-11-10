@@ -1,0 +1,380 @@
+---
+/**
+ * /talks/<slug>/ — talk detail page.
+ *
+ * Renders Markdown body from the `talks` content collection.
+ */
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { CONTACTS, withBase } from '../../consts';
+
+export async function getStaticPaths() {
+  const talks = await getCollection('talks');
+  return talks.map((talk) => ({
+    params: { slug: talk.id },
+    props: { talk },
+  }));
+}
+
+interface Props {
+  talk: CollectionEntry<'talks'>;
+}
+
+const { talk } = Astro.props;
+const { title, venue, year, type, rating, role, videos, slides, abstract, note, teaser } =
+  talk.data;
+const { Content } = await render(talk);
+
+const typeLabel: Record<string, string> = {
+  talk: 'Доклад',
+  roundtable: 'Круглый стол',
+  podcast: 'Подкаст',
+};
+
+const roleLabel: Record<string, string> = {
+  speaker: 'спикер',
+  'invited-expert': 'приглашённый эксперт',
+  host: 'ведущий',
+  guest: 'гость',
+};
+
+// Compose SEO title/description
+const seoTitle = `${title} — ${venue} | r3code.ru`;
+const seoDescription = teaser ?? `${title}. ${venue}. ${year} год.`;
+---
+
+<BaseLayout title={seoTitle} description={seoDescription}>
+  <article class="section talk-detail">
+    <div class="container talk-detail__inner">
+      <a href={withBase('talks/')} class="talk-detail__back">
+        <span aria-hidden="true">←</span> Все доклады
+      </a>
+
+      <header class="talk-detail__head">
+        <p class="talk-detail__meta">
+          <span class="talk-detail__type">{typeLabel[type] ?? 'Доклад'}</span>
+          <span class="talk-detail__sep" aria-hidden="true">·</span>
+          <span>{venue}</span>
+          <span class="talk-detail__sep" aria-hidden="true">·</span>
+          <span>{year}</span>
+          {role !== 'speaker' && (
+            <>
+              <span class="talk-detail__sep" aria-hidden="true">·</span>
+              <span class="talk-detail__role">{roleLabel[role]}</span>
+            </>
+          )}
+        </p>
+
+        <h1>{title}</h1>
+
+        {rating && (
+          <p class="talk-detail__rating">
+            <span class="talk-detail__rating-stars">★ {rating.content} / {rating.delivery}</span>
+            <span class="talk-detail__rating-note">из 5 · содержание / подача</span>
+          </p>
+        )}
+
+        {teaser && (
+          <p class="talk-detail__teaser">{teaser}</p>
+        )}
+      </header>
+
+      {/* === Body (Markdown) === */}
+      <div class="talk-detail__body">
+        <Content />
+      </div>
+
+      {/* === Links block === */}
+      {(videos.length > 0 || slides || abstract || note) ? (
+        <aside class="talk-detail__links">
+          <h2 class="talk-detail__links-title">Материалы</h2>
+
+          {videos.length > 0 && (
+            <div class="talk-detail__links-group">
+              <p class="talk-detail__links-label">Видео:</p>
+              <ul class="talk-detail__video-list">
+                {videos.map((v) => (
+                  <li>
+                    <a href={v.url} target="_blank" rel="noopener" onclick="reachGoal('click_external_talk_link')">
+                      {v.platform} <span aria-hidden="true">↗</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {slides && (
+            <div class="talk-detail__links-group">
+              <p class="talk-detail__links-label">Презентация:</p>
+              <p>
+                <a href={slides} target="_blank" rel="noopener" onclick="reachGoal('click_external_talk_link')">
+                  Открыть слайды <span aria-hidden="true">↗</span>
+                </a>
+              </p>
+            </div>
+          )}
+
+          {abstract && (
+            <div class="talk-detail__links-group">
+              <p class="talk-detail__links-label">Доклад на сайте конференции:</p>
+              <p>
+                <a href={abstract} target="_blank" rel="noopener" onclick="reachGoal('click_external_talk_link')">
+                  {venue} <span aria-hidden="true">↗</span>
+                </a>
+              </p>
+            </div>
+          )}
+
+          {note && (
+            <div class="talk-detail__links-group">
+              <p class="talk-detail__links-label">Дополнительно:</p>
+              <p class="talk-detail__note">{note}</p>
+            </div>
+          )}
+        </aside>
+      ) : (
+        <aside class="talk-detail__links talk-detail__links--empty">
+          <h2 class="talk-detail__links-title">Материалы</h2>
+          <p class="talk-detail__note">Материалы появятся после публикации.</p>
+        </aside>
+      )}
+
+      {/* === CTA: get in touch === */}
+      <aside class="talk-detail__cta">
+        <p>
+          Хотите обсудить похожий кейс для своей команды? Напишите мне в
+          Telegram — отвечаю в течение 24 часов.
+        </p>
+        <a class="btn btn--primary" href={CONTACTS.telegramUrl} target="_blank" rel="noopener">
+          Написать в Telegram <span aria-hidden="true">→</span>
+        </a>
+      </aside>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .talk-detail__inner {
+    max-width: 760px;
+  }
+
+  .talk-detail__back {
+    display: inline-block;
+    margin-bottom: 2rem;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+
+  .talk-detail__back:hover {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  .talk-detail__head {
+    margin-bottom: 2rem;
+  }
+
+  .talk-detail__head h1 {
+    font-size: clamp(1.7rem, 2vw + 1rem, 2.3rem);
+    margin-bottom: 0.75rem;
+    line-height: 1.25;
+  }
+
+  .talk-detail__meta {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin-bottom: 0.75rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+
+  .talk-detail__type {
+    color: var(--color-accent);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .talk-detail__sep {
+    color: var(--color-border-strong);
+  }
+
+  .talk-detail__role {
+    font-style: italic;
+    color: var(--color-text-secondary);
+  }
+
+  .talk-detail__rating {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin: 0 0 0.75rem;
+  }
+
+  .talk-detail__rating-stars {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    color: var(--color-accent);
+    font-size: 1.05rem;
+  }
+
+  .talk-detail__rating-note {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+  }
+
+  .talk-detail__teaser {
+    font-size: 1.05rem;
+    color: var(--color-text-secondary);
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  /* Markdown body */
+  .talk-detail__body {
+    color: var(--color-text-secondary);
+    font-size: 1.05rem;
+    line-height: 1.7;
+  }
+
+  .talk-detail__body :global(h2) {
+    font-size: 1.3rem;
+    color: var(--color-text);
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .talk-detail__body :global(h3) {
+    font-size: 1.1rem;
+    color: var(--color-text);
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .talk-detail__body :global(p) {
+    margin-bottom: 1rem;
+  }
+
+  .talk-detail__body :global(ul) {
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+  }
+
+  .talk-detail__body :global(li) {
+    margin-bottom: 0.4rem;
+  }
+
+  .talk-detail__body :global(code) {
+    background: var(--color-bg-muted);
+    border: 1px solid var(--color-border);
+    padding: 0.1em 0.4em;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    overflow-wrap: anywhere;
+  }
+
+  .talk-detail__body :global(strong) {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+
+  /* Links block */
+  .talk-detail__links {
+    margin-top: 2.5rem;
+    padding: 1.5rem;
+    background: var(--color-bg-subtle);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+  }
+
+  .talk-detail__links-title {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+  }
+
+  .talk-detail__links-group {
+    margin-bottom: 1rem;
+  }
+
+  .talk-detail__links-group:last-child {
+    margin-bottom: 0;
+  }
+
+  .talk-detail__links-label {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .talk-detail__video-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .talk-detail__video-list a {
+    display: inline-block;
+    padding: 0.4rem 0.85rem;
+    background: var(--color-bg);
+    border: 1px solid var(--color-accent-border);
+    border-radius: var(--radius);
+    color: var(--color-accent);
+    font-weight: 500;
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+
+  .talk-detail__video-list a:hover {
+    background: var(--color-accent);
+    color: #fff;
+    border-color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  .talk-detail__note {
+    color: var(--color-text-secondary);
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  /* CTA block */
+  .talk-detail__cta {
+    margin-top: 2.5rem;
+    padding: 1.5rem;
+    background: var(--color-accent-soft);
+    border: 1px solid var(--color-accent-border);
+    border-radius: var(--radius-lg);
+  }
+
+  .talk-detail__cta p {
+    color: var(--color-text-secondary);
+    margin-bottom: 1rem;
+  }
+</style>
+
+<script>
+  // Fire 'view_talk_detail' goal once when the talk detail page loads.
+  if (typeof window.reachGoal === 'function') {
+    window.reachGoal('view_talk_detail');
+  } else {
+    // Wait for Metrika to load (in case it's slow or blocked).
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof window.reachGoal === 'function') {
+        window.reachGoal('view_talk_detail');
+      }
+    });
+  }
+</script>

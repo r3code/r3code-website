@@ -1,0 +1,126 @@
+---
+/**
+ * Header — fixed top navigation.
+ * Logo (left) + nav links + primary CTA (right).
+ * Collapses gracefully on mobile via CSS-only details/summary pattern.
+ */
+import { CONTACTS, withBase } from '../consts';
+
+const navLinks = [
+  { href: withBase('#services'), label: 'Кейсы' },
+  { href: withBase('talks/'), label: 'Доклады' },
+  { href: withBase('#tools'), label: 'Ресурсы' },
+  { href: withBase('#about'), label: 'Обо мне' },
+];
+---
+
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="site-header__brand" href={withBase('')} aria-label="Дмитрий Синявский — на главную">
+      <span class="site-header__name">Дмитрий Синявский</span>
+    </a>
+
+    <nav class="site-header__nav" aria-label="Основная навигация">
+      <ul class="site-header__list">
+        {
+          navLinks.map((link) => (
+            <li>
+              <a href={link.href} class="site-header__link">
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <a class="btn btn--primary site-header__cta" href={CONTACTS.telegramUrl}>
+      <span aria-hidden="true">→</span> Telegram
+    </a>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: saturate(180%) blur(8px);
+    -webkit-backdrop-filter: saturate(180%) blur(8px);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    min-height: 64px;
+  }
+
+  .site-header__brand {
+    display: inline-flex;
+    align-items: baseline;
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 1.15rem;
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  .site-header__brand:hover {
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  .site-header__name {
+    color: var(--color-text);
+  }
+
+  .site-header__nav {
+    display: none;
+  }
+
+  .site-header__list {
+    list-style: none;
+    display: flex;
+    gap: 1.75rem;
+    margin: 0;
+    padding: 0;
+  }
+
+  .site-header__link {
+    color: var(--color-text-secondary);
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color var(--t-fast);
+  }
+
+  .site-header__link:hover {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  .site-header__cta {
+    padding: 0.55rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  @media (min-width: 768px) {
+    .site-header__nav {
+      display: block;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .site-header__cta {
+      padding: 0.45rem 0.75rem;
+      font-size: 0.85rem;
+    }
+    .site-header__brand {
+      font-size: 0.95rem;
+    }
+  }
+</style>

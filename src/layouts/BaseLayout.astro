@@ -1,0 +1,221 @@
+---
+/**
+ * BaseLayout — root HTML shell for r3code.ru.
+ *
+ * Responsibilities:
+ *   - <html lang>, charset, viewport
+ *   - <title> + <meta name="description">
+ *   - Open Graph + Twitter Card tags
+ *   - canonical URL (handles /r3code-website basePath)
+ *   - JSON-LD: Person + Service (3 items) + BreadcrumbList where relevant
+ *   - favicon + OG image
+ *   - font loading (Inter + JetBrains Mono, display=swap)
+ *   - global stylesheet
+ *   - skip link, header slot, main slot, footer slot
+ */
+import '../styles/global.css';
+import { SITE, CONTACTS, SERVICES, withBase } from '../consts';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import YandexMetrika from '../components/YandexMetrika.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Path to OG image relative to site root (without base). */
+  ogImage?: string;
+  /** Override canonical URL (otherwise derived from Astro.url). */
+  canonical?: string;
+  /** Disable indexing for placeholder pages. */
+  noindex?: boolean;
+}
+
+const {
+  title = 'Дмитрий Синявский — Кейсы и опыт внедрения SRE | r3code.ru',
+  description = 'Кейсы, доклады и open-source инструменты по SRE. Реальный опыт миграции с Elastic-стек на Vector+ClickHouse и подготовки телеметрии для AI. Шаблоны и фреймворки для инженеров и CTO.',
+  ogImage = SITE.ogImage,
+  canonical,
+  noindex = false,
+} = Astro.props;
+
+// Astro.url is the absolute URL of the current page (already includes base).
+const canonicalUrl = canonical ?? Astro.url.toString();
+// Build absolute OG image URL (origin + basePath + ogImage path).
+const ogImageUrl = `${new URL(canonicalUrl).origin}${withBase(ogImage)}`;
+
+// JSON-LD: Person
+const personJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Дмитрий Синявский',
+  alternateName: 'r3code',
+  jobTitle: 'SRE Engineer, Speaker, Mentor',
+  url: 'https://r3code.ru',
+  image: 'https://r3code.ru/images/r3code-128.png',
+  sameAs: [
+    CONTACTS.githubUrl,
+    CONTACTS.habrUrl,
+    CONTACTS.getmentorUrl,
+    CONTACTS.telegramUrl,
+    CONTACTS.linkedinUrl,
+  ],
+  knowsAbout: [
+    'SRE',
+    'SLO',
+    'Observability',
+    'Vector',
+    'ClickHouse',
+    'OpenTelemetry',
+    'Kubernetes',
+    'MCP',
+    'AI-Ready Observability',
+  ],
+};
+
+// JSON-LD: Services (3 items) bundled as ItemList for clarity.
+const servicesJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Артефакты и практические кейсы',
+  itemListElement: SERVICES.map((service, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    item: {
+      '@type': 'Service',
+      name: service.title,
+      serviceType: service.serviceType,
+      description: service.description,
+      provider: {
+        '@type': 'Person',
+        name: 'Дмитрий Синявский',
+        alternateName: 'r3code',
+        url: 'https://r3code.ru',
+      },
+      areaServed: 'RU',
+      url: `https://r3code.ru/#${service.id}`,
+    },
+  })),
+};
+
+// JSON-LD: WebSite (helps with sitelinks search box etc.)
+const websiteJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  url: 'https://r3code.ru',
+  name: 'Дмитрий Синявский — Кейсы и опыт внедрения SRE',
+  inLanguage: 'ru-RU',
+  author: { '@type': 'Person', name: 'Дмитрий Синявский' },
+};
+
+const jsonLdBlocks = [websiteJsonLd, personJsonLd, servicesJsonLd];
+---
+
+<!doctype html>
+<html lang={SITE.lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Favicon: SVG (modern), PNG 128 (fallback), ICO (legacy), apple-touch-icon (iOS) -->
+    <link rel="icon" type="image/svg+xml" href={withBase('favicon.svg')} />
+    <link rel="icon" type="image/png" sizes="128x128" href={withBase('images/r3code-128.png')} />
+    <link rel="icon" type="image/x-icon" href={withBase('favicon.ico')} />
+    <link rel="apple-touch-icon" sizes="180x180" href={withBase('images/apple-touch-icon.png')} />
+    <link rel="mask-icon" href={withBase('favicon.svg')} color="#000000" />
+
+    <!-- Primary meta -->
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content="Дмитрий Синявский (r3code)" />
+    <meta name="keywords" content="SRE, SLO, SLI, observability, Vector, ClickHouse, OpenTelemetry, OTel, MCP, логи, мониторинг, надёжность, инфраструктура, Kubernetes, миграция Elastic-стек, AI-Ready Observability, инциденты, постмортемы, ментор SRE, спикер, DevOpsConf, Observability Conf" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="canonical" href={canonicalUrl} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    {!noindex && <meta name="robots" content="index, follow, max-image-preview:large" />}
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:site_name" content="Дмитрий Синявский — SRE-практика и артефакты" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Дмитрий Синявский (r3code) — Кейсы и опыт внедрения SRE" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+    <meta name="twitter:image:alt" content="Дмитрий Синявский (r3code) — Кейсы и опыт внедрения SRE" />
+
+    <!-- Performance: preconnect to Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    />
+
+    <!-- Sitemap -->
+    <link rel="sitemap" type="application/xml" href={withBase('sitemap-index.xml')} />
+
+    <!-- JSON-LD structured data -->
+    {
+      jsonLdBlocks.map((block) => (
+        <script type="application/ld+json" set:html={JSON.stringify(block)} />
+      ))
+    }
+
+    <!-- Yandex.Metrika counter (production only) -->
+    <YandexMetrika />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Перейти к контенту</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+
+    <script>
+      // IntersectionObserver for scroll-based Metrika goals.
+      // Tracks when user scrolls to key sections: services, expert-support, tools.
+      // Each goal fires only once per page load (set in 'fired' Set).
+      const scrollGoals = [
+        { selector: '#services', goal: 'scroll_to_services' },
+        { selector: '#expert-support', goal: 'scroll_to_expert_support' },
+        { selector: '#tools', goal: 'view_tools_section' },
+      ];
+      const fired = new Set<string>();
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const goal = entry.target.getAttribute('data-metrika-goal');
+              if (goal && !fired.has(goal)) {
+                fired.add(goal);
+                if (typeof window.reachGoal === 'function') {
+                  window.reachGoal(goal);
+                }
+              }
+            }
+          });
+        },
+        { threshold: 0.3 } // 30% of section visible = "viewed"
+      );
+
+      scrollGoals.forEach(({ selector, goal }) => {
+        const el = document.querySelector(selector);
+        if (el) {
+          el.setAttribute('data-metrika-goal', goal);
+          observer.observe(el);
+        }
+      });
+    </script>
+  </body>
+</html>

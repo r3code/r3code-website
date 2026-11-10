@@ -1,0 +1,58 @@
+---
+/**
+ * Custom 404 page.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { withBase } from '../consts';
+---
+
+<BaseLayout
+  title="404 — страница не найдена | r3code.ru"
+  description="Запрошенная страница не существует. Вернитесь на главную или напишите в Telegram."
+  noindex={true}
+>
+  <section class="section">
+    <div class="container not-found">
+      <h1 class="not-found__title">404</h1>
+      <p class="not-found__text">
+        Страница не найдена. Возможно, ссылка устарела или была перенесена.
+      </p>
+      <div class="not-found__cta">
+        <a class="btn btn--primary" href={withBase('')}>
+          На главную <span aria-hidden="true">→</span>
+        </a>
+        <a class="btn btn--ghost" href="https://t.me/r3code">
+          Написать в Telegram
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .not-found {
+    max-width: 560px;
+    text-align: center;
+    margin-inline: auto;
+  }
+
+  .not-found__title {
+    font-family: var(--font-mono);
+    font-size: clamp(4rem, 12vw, 7rem);
+    color: var(--color-accent);
+    margin: 0.5rem 0 1rem;
+    line-height: 1;
+  }
+
+  .not-found__text {
+    color: var(--color-text-secondary);
+    margin-bottom: 2rem;
+  }
+
+  .not-found__cta {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+</style>

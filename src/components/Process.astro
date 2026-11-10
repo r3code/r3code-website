@@ -1,0 +1,111 @@
+---
+/**
+ * Process — "Как мы будем работать" — 4-step process block.
+ *
+ * Goes right after Services section, before LeadMagnet.
+ * Numbers (01-04) are large monospace, strict engineering aesthetic.
+ */
+const STEPS = [
+  { num: '01', title: '15-минутный созвон', desc: 'Понимаем боль и контекст.' },
+  { num: '02', title: 'Аудит инфраструктуры', desc: 'Смотрим, где теряются деньги и данные.' },
+  { num: '03', title: 'MVP за 2 недели', desc: 'Внедряем базовый пайплайн или SLO.' },
+  { num: '04', title: 'Замер результата', desc: 'Считаем экономию или прирост надёжности в цифрах.' },
+];
+---
+
+<section class="section process" id="process" aria-labelledby="process-title">
+  <div class="container">
+    <div class="section__head">
+      <h2 id="process-title">Как мы будем работать</h2>
+    </div>
+
+    <ol class="process__grid">
+      {
+        STEPS.map((step) => (
+          <li class="process-step">
+            <span class="process-step__num">{step.num}</span>
+            <div class="process-step__body">
+              <h3 class="process-step__title">{step.title}</h3>
+              <p class="process-step__desc">{step.desc}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .process {
+    background: var(--color-bg-subtle);
+    border-block: 1px solid var(--color-border);
+  }
+
+  .process__grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .process__grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+  }
+
+  .process-step {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.25rem;
+    background: var(--color-bg-subtle);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+  }
+
+  .process-step__num {
+    font-family: var(--font-mono);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-accent);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .process-step__title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0 0 0.35rem;
+    line-height: 1.3;
+  }
+
+  .process-step__desc {
+    font-size: 0.92rem;
+    color: var(--color-text-secondary);
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 540px) {
+    .process-step {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1rem;
+    }
+
+    .process-step__num {
+      font-size: 1.6rem;
+      flex-shrink: 0;
+    }
+
+    .process-step__body {
+      flex: 1;
+    }
+  }
+</style>

@@ -1,0 +1,574 @@
+---
+/**
+ * /talks/ — full talks index.
+ *
+ * Reads from the `talks` content collection (Markdown files in
+ * src/content/talks/) + TALKS_ANNOUNCED + AMBASSADOR_ACTIVITIES from consts.
+ *
+ * Layout: single chronological feed (newest first), filter chips on top
+ * to show only items of a specific type. Each card shows a type badge.
+ */
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { TALKS_ANNOUNCED, AMBASSADOR_ACTIVITIES, withBase } from '../../consts';
+
+const allTalks = await getCollection('talks');
+
+type ItemType = 'talk' | 'roundtable' | 'podcast' | 'announcement' | 'ambassador';
+
+interface FeedItem {
+  /** Unique key for React-like keys. */
+  id: string;
+  type: ItemType;
+  title: string;
+  venue: string;
+  year: number;
+  date?: string;
+  /**
+   * ISO date for sorting. Empty string if no exact date is known —
+   * such items sink to the bottom of the chronological feed.
+   */
+  sortDate: string;
+  /** Optional rating. */
+  rating?: { content: number; delivery: number };
+  /** Optional teaser. */
+  teaser?: string;
+  /** Optional role label. */
+  role?: string;
+  /** Optional venue URL. */
+  venueUrl?: string;
+  /** Optional note (for announcements). */
+  note?: string;
+  /** Detail page link (only for collection-based items). */
+  detailUrl?: string;
+  /** Number of videos. */
+  videoCount?: number;
+}
+
+const roleLabel: Record<string, string> = {
+  speaker: 'спикер',
+  'invited-expert': 'приглашённый эксперт',
+  host: 'ведущий',
+  guest: 'гость',
+};
+
+const typeLabel: Record<ItemType, string> = {
+  talk: 'Доклад',
+  roundtable: 'Круглый стол',
+  podcast: 'Подкаст',
+  announcement: 'Анонс',
+  ambassador: 'Амбассадор',
+};
+
+// Build the unified feed.
+const collectionItems: FeedItem[] = allTalks.map((talk) => {
+  const data = talk.data;
+  // Empty sortDate if no exact date — sinks to bottom of the feed.
+  const sortDate = data.date ?? '';
+  return {
+    id: talk.id,
+    type: data.type,
+    title: data.title,
+    venue: data.venue,
+    year: data.year,
+    date: data.date,
+    sortDate,
+    rating: data.rating,
+    teaser: data.teaser,
+    role: roleLabel[data.role] ?? 'участник',
+    venueUrl: data.venueUrl,
+    detailUrl: withBase(`talks/${talk.id}/`),
+    videoCount: data.videos.length,
+  };
+});
+
+const announcementItems: FeedItem[] = TALKS_ANNOUNCED.map((a) => ({
+  id: `ann-${a.venue}-${a.year}`,
+  type: 'announcement',
+  title: a.title,
+  venue: a.venue,
+  year: a.year,
+  date: a.date,
+  sortDate: a.date ?? '',
+  venueUrl: a.url,
+  note: a.note,
+}));
+
+const ambassadorItems: FeedItem[] = AMBASSADOR_ACTIVITIES.map((a) => ({
+  id: `amb-${a.venue}-${a.year}`,
+  type: 'ambassador',
+  title: a.title,
+  venue: a.venue,
+  year: a.year,
+  sortDate: '',
+  note: a.note,
+}));
+
+// Sort: items with explicit date first (descending), then items without date.
+const feed: FeedItem[] = [...collectionItems, ...announcementItems, ...ambassadorItems].sort(
+  (a, b) => {
+    const aHasDate = a.sortDate ? 1 : 0;
+    const bHasDate = b.sortDate ? 1 : 0;
+    // Items with date go first.
+    if (aHasDate !== bHasDate) return bHasDate - aHasDate;
+    // Within same group, sort by date desc.
+    return b.sortDate.localeCompare(a.sortDate);
+  },
+);
+
+// Count by type for filter chips.
+const typeCounts: Record<ItemType, number> = {
+  talk: 0,
+  roundtable: 0,
+  podcast: 0,
+  announcement: 0,
+  ambassador: 0,
+};
+feed.forEach((item) => {
+  typeCounts[item.type] += 1;
+});
+
+const filterChips: { type: ItemType | 'all'; label: string; count: number }[] = [
+  { type: 'all', label: 'Все', count: feed.length },
+  { type: 'talk', label: 'Доклады', count: typeCounts.talk },
+  { type: 'roundtable', label: 'Круглые столы', count: typeCounts.roundtable },
+  { type: 'podcast', label: 'Подкасты', count: typeCounts.podcast },
+  { type: 'announcement', label: 'Анонсы', count: typeCounts.announcement },
+  { type: 'ambassador', label: 'Амбассадор', count: typeCounts.ambassador },
+];
+
+const title = 'Доклады, круглые столы и подкасты — Дмитрий Синявский | r3code.ru';
+const description =
+  'Полный список выступлений Дмитрия Синявского на конференциях DevOpsConf, SaintHighLoad, HardFest, Observability Conf, Стачка, Merge Baltic и в подкасте Podcast++: доклады, круглые столы, подкасты. Ссылки на видео и презентации.';
+---
+
+<BaseLayout title={title} description={description}>
+  <article class="section talks-index">
+    <div class="container talks-index__inner">
+      <a href={withBase('')} class="talks-index__back">
+        <span aria-hidden="true">←</span> На главную
+      </a>
+
+      <header class="talks-index__head">
+        <h1>Доклады и выступления</h1>
+        <p class="talks-index__lead">
+          Полный список публичных выступлений на конференциях и в подкастах.
+          Для каждого — ссылки на видео, презентации и страницу конференции,
+          если они опубликованы.
+        </p>
+      </header>
+
+      {/* === Filter chips === */}
+      <div class="filter-chips" role="tablist" aria-label="Фильтр по типу контента">
+        {
+          filterChips.map((chip) => (
+            <button
+              type="button"
+              class="filter-chip"
+              data-filter={chip.type}
+              aria-pressed={chip.type === 'all' ? 'true' : 'false'}
+              role="tab"
+            >
+              <span class="filter-chip__label">{chip.label}</span>
+              <span class="filter-chip__count">{chip.count}</span>
+            </button>
+          ))
+        }
+      </div>
+
+      {/* === Feed === */}
+      <ul class="talk-feed" id="talk-feed">
+        {
+          feed.map((item) => (
+            <li
+              class="feed-item"
+              data-type={item.type}
+              data-sort-date={item.sortDate}
+            >
+              <div class="feed-item__type-row">
+                <span class={`feed-item__type feed-item__type--${item.type}`}>
+                  {typeLabel[item.type]}
+                </span>
+                {item.role && (
+                  <span class="feed-item__role">{item.role}</span>
+                )}
+                <span class="feed-item__date">
+                  {item.date
+                    ? new Date(item.date).toLocaleDateString('ru-RU', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                      })
+                    : item.year}
+                </span>
+              </div>
+
+              <h2 class="feed-item__title">
+                {item.detailUrl ? (
+                  <a href={item.detailUrl}>{item.title}</a>
+                ) : (
+                  item.title
+                )}
+              </h2>
+
+              <p class="feed-item__venue">
+                {item.venueUrl ? (
+                  <a href={item.venueUrl} target="_blank" rel="noopener">
+                    {item.venue} <span aria-hidden="true">↗</span>
+                  </a>
+                ) : (
+                  item.venue
+                )}
+              </p>
+
+              {item.teaser && (
+                <p class="feed-item__teaser">{item.teaser}</p>
+              )}
+
+              {item.note && (
+                <p class="feed-item__note">{item.note}</p>
+              )}
+
+              <div class="feed-item__meta">
+                {item.rating && (
+                  <span class="feed-item__rating">
+                    ★ {item.rating.content}/{item.rating.delivery}
+                    <span class="feed-item__rating-note">из 5</span>
+                  </span>
+                )}
+                {item.videoCount && item.videoCount > 0 ? (
+                  <span class="feed-item__video-badge">
+                    видео × {item.videoCount}
+                  </span>
+                ) : null}
+                {item.detailUrl && (
+                  <a class="feed-item__open" href={item.detailUrl}>
+                    Открыть →
+                  </a>
+                )}
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .talks-index__inner {
+    max-width: 920px;
+  }
+
+  .talks-index__back {
+    display: inline-block;
+    margin-bottom: 2rem;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+
+  .talks-index__back:hover {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  .talks-index__head {
+    margin-bottom: 2rem;
+  }
+
+  .talks-index__head h1 {
+    font-size: clamp(1.9rem, 2vw + 1rem, 2.5rem);
+    margin-bottom: 0.75rem;
+  }
+
+  .talks-index__lead {
+    color: var(--color-text-secondary);
+    font-size: 1.05rem;
+    max-width: 60ch;
+  }
+
+  /* === Filter chips === */
+  .filter-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .filter-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.85rem;
+    font-family: var(--font-sans);
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background var(--t-fast), color var(--t-fast),
+      border-color var(--t-fast);
+  }
+
+  .filter-chip:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  .filter-chip[aria-pressed='true'] {
+    background: var(--color-accent);
+    color: #fff;
+    border-color: var(--color-accent);
+  }
+
+  .filter-chip[aria-pressed='true']:hover {
+    background: var(--color-accent-hover);
+    color: #fff;
+  }
+
+  .filter-chip__count {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    padding: 0.05rem 0.35rem;
+    background: rgba(255, 255, 255, 0.18);
+    border-radius: 4px;
+  }
+
+  .filter-chip[aria-pressed='false'] .filter-chip__count {
+    background: var(--color-bg-muted);
+    color: var(--color-text-muted);
+  }
+
+  /* === Feed === */
+  .talk-feed {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .feed-item {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    transition: border-color var(--t-fast), box-shadow var(--t-fast);
+  }
+
+  .feed-item:hover {
+    border-color: var(--color-accent);
+    box-shadow: 0 2px 8px rgba(0, 102, 255, 0.04);
+  }
+
+  .feed-item[data-type='announcement'] {
+    border-style: dashed;
+    background: var(--color-bg-subtle);
+  }
+
+  .feed-item[data-type='announcement']:hover {
+    border-color: var(--color-accent);
+  }
+
+  .feed-item[data-type='ambassador'] {
+    border-left: 3px solid var(--color-accent);
+    background: var(--color-bg-subtle);
+  }
+
+  .feed-item__type-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.6rem;
+    flex-wrap: wrap;
+  }
+
+  .feed-item__type {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+    border: 1px solid var(--color-accent-border);
+  }
+
+  .feed-item__type--talk {
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+    border-color: var(--color-accent-border);
+  }
+
+  .feed-item__type--roundtable {
+    background: #fef3c7;
+    color: #b45309;
+    border-color: #fde68a;
+  }
+
+  .feed-item__type--podcast {
+    background: #ede9fe;
+    color: #6d28d9;
+    border-color: #ddd6fe;
+  }
+
+  .feed-item__type--announcement {
+    background: var(--color-bg-muted);
+    color: var(--color-text-muted);
+    border-color: var(--color-border);
+  }
+
+  .feed-item__type--ambassador {
+    background: #dcfce7;
+    color: #15803d;
+    border-color: #bbf7d0;
+  }
+
+  .feed-item__role {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    font-style: italic;
+  }
+
+  .feed-item__date {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+    margin-left: auto;
+  }
+
+  .feed-item__title {
+    font-size: 1.15rem;
+    line-height: 1.3;
+    margin: 0 0 0.4rem;
+    font-weight: 600;
+  }
+
+  .feed-item__title a {
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  .feed-item__title a:hover {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  .feed-item__venue {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--color-accent);
+    margin: 0 0 0.5rem;
+  }
+
+  .feed-item__venue a {
+    text-decoration: none;
+  }
+
+  .feed-item__venue a:hover {
+    text-decoration: underline;
+  }
+
+  .feed-item__teaser {
+    color: var(--color-text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0 0 0.5rem;
+  }
+
+  .feed-item__note {
+    color: var(--color-text-muted);
+    font-size: 0.88rem;
+    line-height: 1.4;
+    margin: 0;
+    font-style: italic;
+  }
+
+  .feed-item__meta {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    margin-top: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .feed-item__rating {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--color-accent);
+    font-weight: 600;
+  }
+
+  .feed-item__rating-note {
+    font-weight: 400;
+    color: var(--color-text-muted);
+    margin-left: 0.25rem;
+  }
+
+  .feed-item__video-badge {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+    background: var(--color-bg-muted);
+    padding: 0.1rem 0.45rem;
+    border-radius: 4px;
+    border: 1px solid var(--color-border);
+  }
+
+  .feed-item__open {
+    margin-left: auto;
+    font-weight: 600;
+    font-size: 0.88rem;
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  .feed-item__open:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 540px) {
+    .feed-item {
+      padding: 0.85rem 1rem;
+    }
+
+    .feed-item__date {
+      margin-left: 0;
+    }
+
+    .feed-item__open {
+      margin-left: 0;
+    }
+  }
+</style>
+
+<script>
+  // Filter chips toggle visibility of feed items by data-type.
+  const chips = document.querySelectorAll<HTMLButtonElement>('.filter-chip');
+  const items = document.querySelectorAll<HTMLLIElement>('.feed-item');
+
+  chips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      const filter = chip.dataset.filter;
+      // Toggle aria-pressed
+      chips.forEach((c) => c.setAttribute('aria-pressed', 'false'));
+      chip.setAttribute('aria-pressed', 'true');
+
+      // Show/hide items
+      items.forEach((item) => {
+        if (filter === 'all' || item.dataset.type === filter) {
+          item.style.display = '';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    });
+  });
+</script>

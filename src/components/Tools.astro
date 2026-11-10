@@ -1,0 +1,166 @@
+---
+/**
+ * Tools — useful tools & open-source projects for the SRE community.
+ *
+ * Two-column grid on desktop (groups side by side), single column on mobile.
+ * Each item is a card with optional icon, title (clickable), and note.
+ */
+import { TOOLS_RESOURCES } from '../consts';
+---
+
+<section class="section tools" id="tools" aria-labelledby="tools-title">
+  <div class="container">
+    <div class="section__head">
+      <h2 id="tools-title">Инструменты и ресурсы</h2>
+    </div>
+
+    <p class="tools__lead">
+      Полезные инструменты от коллег и мои open-source наработки:
+    </p>
+
+    <div class="tools__grid">
+      {
+        TOOLS_RESOURCES.map((group) => (
+          <div class="tool-group">
+            <h3 class="tool-group__title">{group.title}</h3>
+            <ul class="tool-group__list">
+              {group.items.map((item) => (
+                <li class="tool-item">
+                  <a
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener"
+                    class="tool-item__link"
+                  >
+                    {item.icon && (
+                      <span class="tool-item__icon" aria-hidden="true">{item.icon}</span>
+                    )}
+                    <span class="tool-item__body">
+                      <span class="tool-item__title">{item.title}</span>
+                      {item.note && (
+                        <span class="tool-item__note">{item.note}</span>
+                      )}
+                    </span>
+                    <span class="tool-item__external" aria-hidden="true">↗</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .tools {
+    background: var(--color-bg-subtle);
+    border-block: 1px solid var(--color-border);
+  }
+
+  .tools__lead {
+    color: var(--color-text-secondary);
+    max-width: 60ch;
+    margin: -0.5rem 0 2rem;
+    font-size: 1rem;
+  }
+
+  .tools__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  @media (min-width: 768px) {
+    .tools__grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+    }
+  }
+
+  .tool-group__title {
+    font-size: 1.05rem;
+    margin-bottom: 1rem;
+    color: var(--color-text);
+  }
+
+  .tool-group__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .tool-item {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-bg);
+    transition: border-color var(--t-fast), box-shadow var(--t-fast),
+      transform var(--t-fast);
+  }
+
+  .tool-item:hover {
+    border-color: var(--color-accent);
+    box-shadow: 0 2px 8px rgba(0, 102, 255, 0.04);
+    transform: translateY(-1px);
+  }
+
+  .tool-item__link {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .tool-item__link:hover {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .tool-item__icon {
+    font-size: 1.4rem;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .tool-item__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .tool-item__title {
+    font-weight: 600;
+    color: var(--color-text);
+    font-size: 0.95rem;
+    line-height: 1.3;
+  }
+
+  .tool-item:hover .tool-item__title {
+    color: var(--color-accent);
+  }
+
+  .tool-item__note {
+    font-size: 0.82rem;
+    color: var(--color-text-muted);
+    line-height: 1.4;
+  }
+
+  .tool-item__external {
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+
+  .tool-item:hover .tool-item__external {
+    color: var(--color-accent);
+  }
+</style>

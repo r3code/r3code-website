@@ -1,0 +1,60 @@
+---
+/**
+ * Services — three product cards.
+ *
+ * Order is FIXED: log cost optimization (featured) → AI-Ready Observability → SLO audit.
+ * First card is visually emphasized (badge + accent border + larger on desktop).
+ */
+import { SERVICES } from '../consts';
+import ServiceCard from './ServiceCard.astro';
+---
+
+<section class="section services" id="services" aria-labelledby="services-title">
+  <div class="container">
+    <div class="section__head">
+      <h2 id="services-title">Артефакты и практические кейсы</h2>
+    </div>
+
+    <div class="services__grid">
+      {
+        SERVICES.map((service) => (
+          <ServiceCard service={service} />
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .services__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  /* Grid items default to `min-width: auto`, which means they refuse to
+     shrink below the min-content width of their descendants. The CTA
+     button label "Обсудить проект →" combined with the global `.btn
+     { white-space: nowrap }` forces each card's min-content above the
+     1fr column width at the 768px breakpoint, blowing the grid out to
+     ~898px wide. `min-width: 0` lets each card shrink to its allotted
+     track width. */
+  .services__grid > * {
+    min-width: 0;
+  }
+
+  @media (min-width: 768px) {
+    .services__grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      align-items: stretch;
+    }
+
+    /* Featured card spans 1.25 columns visually via raised shadow + slight scale */
+    .services__grid > :first-child {
+      transform: scale(1.02);
+      transform-origin: top left;
+      z-index: 1;
+    }
+  }
+</style>

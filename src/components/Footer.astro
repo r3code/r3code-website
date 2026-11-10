@@ -1,0 +1,165 @@
+---
+/**
+ * Footer — contacts + legal.
+ */
+import { CONTACTS, CHANNELS, withBase } from '../consts';
+
+const year = new Date().getFullYear();
+
+const footerLinks = [
+  { label: 'Telegram', value: '@' + CONTACTS.telegram, href: CONTACTS.telegramUrl, goal: null },
+  { label: 'Email', value: CONTACTS.email, href: `mailto:${CONTACTS.email}`, goal: null },
+  { label: 'GetMentor', value: 'mentor/dmitriy-siniavskiy-1881', href: CONTACTS.getmentorUrl, goal: 'cta_getmentor_booking' },
+  { label: 'GitHub', value: 'github.com/r3code', href: CONTACTS.githubUrl, goal: null },
+  { label: 'Опыт работы', value: 'Резюме', href: CONTACTS.habrCareerUrl, goal: 'click_resume_habr_career' },
+  { label: 'Публикации', value: 'Habr', href: CONTACTS.habrUrl, goal: 'click_articles_habr' },
+  { label: 'LinkedIn', value: 'linkedin.com/in/dmsin', href: CONTACTS.linkedinUrl, goal: null },
+  { label: 'Приватность', value: 'политика', href: withBase('privacy/'), goal: null },
+];
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <div class="site-footer__primary">
+      <div class="site-footer__who">
+        <span class="site-footer__name">Дмитрий Синявский</span>
+        <span class="site-footer__nick">(r3code)</span>
+        <span class="site-footer__status">· Самозанятый</span>
+      </div>
+      <ul class="site-footer__links">
+        {
+          footerLinks.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                class="site-footer__link"
+                {...(link.goal ? { onclick: `reachGoal('${link.goal}')` } : {})}
+              >
+                <span class="site-footer__link-label">{link.label}</span>
+                <span class="site-footer__link-value">{link.value}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="site-footer__channels">
+        Каналы:
+        <a href={CHANNELS.allslo.url} onclick="reachGoal('click_telegram_channel_allslo')">@{CHANNELS.allslo.handle}</a>
+        <span aria-hidden="true">·</span>
+        <a href={CHANNELS.letitkit.url} onclick="reachGoal('click_telegram_channel_letitkit')">@{CHANNELS.letitkit.handle}</a>
+      </div>
+    </div>
+
+    <div class="site-footer__legal">
+      © {year} r3code.ru<br />
+      Готов к работе по официальным счетам.
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--color-bg-subtle);
+    border-top: 1px solid var(--color-border);
+    padding-block: 2.5rem 2rem;
+    margin-top: var(--section-gap);
+  }
+
+  .site-footer__inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+
+  @media (min-width: 768px) {
+    .site-footer__inner {
+      grid-template-columns: 1fr auto;
+      gap: 3rem;
+    }
+  }
+
+  .site-footer__who {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .site-footer__name {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+
+  .site-footer__nick {
+    color: var(--color-text-muted);
+    margin-left: 0.25rem;
+  }
+
+  .site-footer__status {
+    color: var(--color-text-muted);
+    margin-left: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .site-footer__links {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.5rem 1.5rem;
+  }
+
+  .site-footer__link {
+    display: inline-flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: var(--color-text-secondary);
+    font-size: 0.85rem;
+    line-height: 1.4;
+    padding: 0.25rem 0;
+  }
+
+  .site-footer__link:hover {
+    text-decoration: none;
+    color: var(--color-accent);
+  }
+
+  .site-footer__link-label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+  }
+
+  .site-footer__link-value {
+    color: inherit;
+  }
+
+  .site-footer__channels {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .site-footer__channels a {
+    font-family: var(--font-mono);
+  }
+
+  .site-footer__legal {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    text-align: left;
+    line-height: 1.5;
+  }
+
+  @media (min-width: 768px) {
+    .site-footer__legal {
+      text-align: right;
+    }
+  }
+</style>

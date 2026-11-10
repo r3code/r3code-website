@@ -1,0 +1,142 @@
+---
+/**
+ * ExpertSupport — consulting & mentoring for teams and individuals.
+ *
+ * Was 'Mentorship 1-на-1'. Refocused on helping companies build reliability
+ * processes. Individual mentoring stays as a secondary option via GetMentor.
+ */
+import { EXPERT_SUPPORT } from '../consts';
+---
+
+<section class="section expert-support" id="expert-support" aria-labelledby="expert-support-title">
+  <div class="container expert-support__inner">
+    <div class="expert-support__lead">
+      <h2 id="expert-support-title">{EXPERT_SUPPORT.title}</h2>
+      <p class="expert-support__lead-text">{EXPERT_SUPPORT.lead}</p>
+
+      <div class="expert-support__cta">
+        <a
+          class="btn btn--primary"
+          href={EXPERT_SUPPORT.ctaCompany.href}
+          target="_blank"
+          rel="noopener"
+          onclick="reachGoal('cta_telegram_consulting_request')"
+        >
+          {EXPERT_SUPPORT.ctaCompany.label}
+          <span aria-hidden="true">→</span>
+        </a>
+        <div class="expert-support__mentor">
+          <a
+            class="btn btn--ghost"
+            href={EXPERT_SUPPORT.ctaMentor.href}
+            target="_blank"
+            rel="noopener"
+            onclick="reachGoal('cta_getmentor_booking')"
+          >
+            {EXPERT_SUPPORT.ctaMentor.label}
+          </a>
+          {EXPERT_SUPPORT.ctaMentor.note && (
+            <p class="expert-support__mentor-note">{EXPERT_SUPPORT.ctaMentor.note}</p>
+          )}
+        </div>
+      </div>
+    </div>
+
+    <ul class="expert-support__directions">
+      {
+        EXPERT_SUPPORT.directions.map((d) => (
+          <li class="expert-support__direction">
+            <span class="expert-support__audience">{d.audience}</span>
+            <p class="expert-support__body">{d.body}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .expert-support {
+    background: var(--color-bg-subtle);
+    border-block: 1px solid var(--color-border);
+  }
+
+  .expert-support__inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+
+  @media (min-width: 768px) {
+    .expert-support__inner {
+      grid-template-columns: 1.3fr 1fr;
+      gap: 3rem;
+    }
+  }
+
+  .expert-support__lead-text {
+    color: var(--color-text-secondary);
+    max-width: 60ch;
+    margin-bottom: 1.5rem;
+    font-size: 1.05rem;
+  }
+
+  .expert-support__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+  }
+
+  .expert-support__mentor {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .expert-support__mentor-note {
+    font-size: 0.82rem;
+    color: var(--color-text-muted);
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  .expert-support__directions {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .expert-support__direction {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    transition: border-color var(--t-fast);
+  }
+
+  .expert-support__direction:hover {
+    border-color: var(--color-accent);
+  }
+
+  .expert-support__audience {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-accent);
+    margin-bottom: 0.5rem;
+  }
+
+  .expert-support__body {
+    color: var(--color-text-secondary);
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+</style>

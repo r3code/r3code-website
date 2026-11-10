@@ -1,0 +1,388 @@
+/* =========================================================================
+   r3code.ru — global stylesheet
+   Minimalist, "engineering" style. No gradients, no stock photos.
+   Palette: white background, #0066ff accent.
+   Typography: Inter (UI) + JetBrains Mono (code).
+   ========================================================================= */
+
+/* ---------- Design tokens ---------- */
+:root {
+  /* Palette */
+  --color-bg: #fefefe;
+  --color-bg-subtle: #f8fafc;
+  --color-bg-muted: #f1f5f9;
+  --color-border: #e2e8f0;
+  --color-border-strong: #cbd5e1;
+  --color-text: #1a1a1a;
+  --color-text-secondary: #475569;
+  --color-text-muted: #636b78;
+  --color-accent: #0058e0;
+  --color-accent-hover: #004ab8;
+  --color-accent-soft: #eff6ff;
+  --color-accent-border: #bfdbfe;
+  --color-feature-badge: #ff6b00;
+
+  /* Typography */
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', Menlo, Consolas,
+    monospace;
+
+  /* Sizing */
+  --container-max: 1200px;
+  --container-pad: 24px;
+  --section-gap: 64px;
+  --section-gap-mobile: 48px;
+  --radius: 8px;
+  --radius-lg: 12px;
+
+  /* Transitions */
+  --t-fast: 120ms ease;
+  --t-med: 200ms ease;
+}
+
+/* ---------- Reset & base ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+img,
+picture,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+  transition: color var(--t-fast);
+}
+
+a:hover {
+  color: var(--color-accent-hover);
+  text-decoration: underline;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+}
+
+/* ---------- Typography ---------- */
+h1,
+h2,
+h3,
+h4 {
+  margin: 0 0 0.5em;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--color-text);
+  letter-spacing: -0.01em;
+}
+
+h1 {
+  font-size: clamp(2.4rem, 5vw + 0.5rem, 3.5rem); /* ~38 → 56 */
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  font-size: clamp(1.9rem, 2vw + 1rem, 2.5rem); /* ~30 → 40 */
+}
+
+h3 {
+  font-size: clamp(1.35rem, 1vw + 1rem, 1.75rem); /* ~22 → 28 */
+}
+
+p {
+  margin: 0 0 1em;
+}
+
+code,
+kbd,
+pre {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+}
+
+:not(pre) > code {
+  background: var(--color-bg-muted);
+  border: 1px solid var(--color-border);
+  padding: 0.1em 0.4em;
+  border-radius: 4px;
+  color: var(--color-text);
+  /* Allow long unbreakable code tokens (e.g. `TTL_overridden=true/false`)
+     to wrap at any character if they would otherwise overflow their
+     container — instead of forcing the whole row to overflow the viewport
+     on narrow mobile widths. Short tokens keep their inline look because
+     there are no break opportunities inside them. */
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Layout helpers ---------- */
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+@media (min-width: 768px) {
+  :root {
+    --container-pad: 48px;
+  }
+}
+
+.section {
+  padding-block: var(--section-gap-mobile);
+}
+
+@media (min-width: 768px) {
+  .section {
+    padding-block: var(--section-gap);
+  }
+}
+
+.section--subtle {
+  background: var(--color-bg-subtle);
+  border-block: 1px solid var(--color-border);
+}
+
+.section--accent {
+  background: var(--color-accent-soft);
+  border-block: 1px solid var(--color-accent-border);
+}
+
+.section__head {
+  max-width: 760px;
+  margin-bottom: 2.5rem;
+}
+
+.section__head--center {
+  margin-inline: auto;
+  text-align: center;
+}
+
+.section__eyebrow {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 0.75rem;
+}
+
+.section__lead {
+  font-size: 1.1rem;
+  color: var(--color-text-secondary);
+  max-width: 60ch;
+}
+
+.section__head--center .section__lead {
+  margin-inline: auto;
+}
+
+/* ---------- Skip link (a11y) ---------- */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--color-text);
+  color: #fff;
+  padding: 0.5rem 1rem;
+  z-index: 100;
+}
+
+.skip-link:focus {
+  left: 0;
+  color: #fff;
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.2;
+  padding: 0.85rem 1.5rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background var(--t-fast), color var(--t-fast),
+    border-color var(--t-fast), transform var(--t-fast);
+  white-space: nowrap;
+}
+
+.btn:hover {
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+
+.btn--primary {
+  background: var(--color-accent);
+  color: #fff;
+  border-color: var(--color-accent);
+}
+
+.btn--primary:hover {
+  background: var(--color-accent-hover);
+  color: #fff;
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--color-text);
+  border-color: var(--color-border-strong);
+}
+
+.btn--ghost:hover {
+  background: var(--color-bg-muted);
+  color: var(--color-text);
+  border-color: var(--color-text);
+}
+
+.btn--lg {
+  font-size: 1.05rem;
+  padding: 1rem 1.75rem;
+}
+
+.btn--block {
+  width: 100%;
+}
+
+.btn__note {
+  display: block;
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+/* ---------- Card ---------- */
+.card {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  transition: border-color var(--t-med), box-shadow var(--t-med),
+    transform var(--t-med);
+}
+
+.card:hover {
+  border-color: var(--color-border-strong);
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+}
+
+.card--featured {
+  border: 2px solid var(--color-accent);
+  box-shadow: 0 8px 24px rgba(0, 102, 255, 0.08);
+  position: relative;
+}
+
+.card--featured:hover {
+  box-shadow: 0 12px 32px rgba(0, 102, 255, 0.12);
+}
+
+.card__badge {
+  position: absolute;
+  top: -12px;
+  left: 1.5rem;
+  background: var(--color-feature-badge);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.75rem;
+  border-radius: 4px;
+}
+
+.card__icon {
+  font-size: 2.25rem;
+  line-height: 1;
+  margin-bottom: 0.75rem;
+  display: block;
+}
+
+.card__title {
+  margin-bottom: 0.25rem;
+}
+
+.card__subtitle {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  color: var(--color-accent);
+  margin-bottom: 1rem;
+}
+
+.card__body {
+  color: var(--color-text-secondary);
+  margin-bottom: 1rem;
+}
+
+/* ---------- Inline list with checkmark ---------- */
+.checklist {
+  list-style: none;
+  margin: 0 0 1.5rem;
+  padding: 0;
+}
+
+.checklist > li {
+  position: relative;
+  padding-left: 1.75rem;
+  margin-bottom: 0.5rem;
+  color: var(--color-text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.checklist > li::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-weight: 700;
+}
+
+.checklist > li code {
+  font-size: 0.88em;
+}

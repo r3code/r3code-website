@@ -1,0 +1,108 @@
+{
+  "_comment": "Color pairs to check against WCAG AA. Each pair has: id, foreground, background, context, largeText (boolean — if true, threshold is 3.0 instead of 4.5).",
+  "_colors_used": {
+    "accent": "#0058e0",
+    "accent-hover": "#004ab8",
+    "text-muted": "#636b78",
+    "text-secondary": "#475569",
+    "text": "#1a1a1a",
+    "bg": "#fefefe",
+    "bg-subtle": "#f8fafc",
+    "bg-muted": "#f1f5f9",
+    "accent-soft": "#eff6ff"
+  },
+  "pairs": [
+    {
+      "id": "body-text-on-white",
+      "fg": "#1a1a1a",
+      "bg": "#fefefe",
+      "context": "Body text (var(--color-text) on var(--color-bg))",
+      "largeText": false
+    },
+    {
+      "id": "text-secondary-on-white",
+      "fg": "#475569",
+      "bg": "#fefefe",
+      "context": "Hero subtitle, talk body (var(--color-text-secondary) on white)",
+      "largeText": false
+    },
+    {
+      "id": "text-secondary-on-subtle",
+      "fg": "#475569",
+      "bg": "#f8fafc",
+      "context": "Hero subtitle upper part (gradient starts at --color-bg-subtle)",
+      "largeText": false
+    },
+    {
+      "id": "text-muted-on-white",
+      "fg": "#636b78",
+      "bg": "#fefefe",
+      "context": "Hero note, talk notes, dates (--color-text-muted on white)",
+      "largeText": false
+    },
+    {
+      "id": "text-muted-on-subtle",
+      "fg": "#636b78",
+      "bg": "#f8fafc",
+      "context": "Muted text on SocialProof/Mentorship subtle bg sections",
+      "largeText": false
+    },
+    {
+      "id": "text-muted-on-bg-muted",
+      "fg": "#636b78",
+      "bg": "#f1f5f9",
+      "context": "Muted text on muted cards (--color-bg-muted)",
+      "largeText": false
+    },
+    {
+      "id": "accent-on-white",
+      "fg": "#0058e0",
+      "bg": "#fefefe",
+      "context": "Links, accent text on white background",
+      "largeText": false
+    },
+    {
+      "id": "accent-on-accent-soft",
+      "fg": "#0058e0",
+      "bg": "#eff6ff",
+      "context": "Accent text on accent-soft bg (PC memberships, LeadMagnet bg)",
+      "largeText": false
+    },
+    {
+      "id": "white-on-accent",
+      "fg": "#ffffff",
+      "bg": "#0058e0",
+      "context": "Primary button text (white on --color-accent)",
+      "largeText": false
+    },
+    {
+      "id": "text-on-bg-subtle",
+      "fg": "#1a1a1a",
+      "bg": "#f8fafc",
+      "context": "Body text on subtle-bg sections (SocialProof, Mentorship, About quote)",
+      "largeText": false
+    },
+    {
+      "id": "text-secondary-on-accent-soft",
+      "fg": "#475569",
+      "bg": "#eff6ff",
+      "context": "Hero note-style text on accent-soft bg (LeadMagnet footnote)",
+      "largeText": false
+    },
+    {
+      "id": "company-tag-on-accent-soft",
+      "fg": "#0058e0",
+      "bg": "#eff6ff",
+      "context": "Company tag chips in SocialProof (accent text on accent-soft)",
+      "largeText": false
+    },
+    {
+      "id": "text-muted-on-bg-subtle-large",
+      "fg": "#636b78",
+      "bg": "#f8fafc",
+      "context": "Large muted text (e.g. eyebrow mono 0.85rem on subtle — borderline, treated as large)",
+      "largeText": true
+    }
+  ]
+}
+

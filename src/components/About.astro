@@ -1,0 +1,154 @@
+---
+/**
+ * About — two-column block: text on left, stage photo on right.
+ *
+ * Photo is landscape (968x602, aspect 1.61:1), resized preserving
+ * proportions (no crop). On desktop takes ~50% width, on mobile —
+ * full container width.
+ */
+import { CONTACTS } from '../consts';
+import { withBase } from '../consts';
+
+const aboutLinks = [
+  { label: 'LinkedIn', href: CONTACTS.linkedinUrl, external: true },
+  { label: 'Резюме', href: CONTACTS.habrCareerUrl, external: true },
+  { label: 'GitHub', href: CONTACTS.githubUrl, external: true },
+];
+
+const photoSrcset = [
+  `${withBase('images/stage-photo-600.webp')} 1x`,
+  `${withBase('images/stage-photo-900.webp')} 1.5x`,
+  `${withBase('images/stage-photo-1200.webp')} 2x`,
+].join(', ');
+---
+
+<section class="section about" id="about" aria-labelledby="about-title">
+  <div class="container about__inner">
+    <div class="about__text">
+      <h2 id="about-title">Обо мне</h2>
+      <p>
+        Более 20 лет в IT. Путь от сисадмина до SRE. Опыт в телекоме, финтехе,
+        ретейле, стартапах. 3 года преподавал программирование школьникам. Веду
+        активную экспертную деятельность: выступаю на конференциях, менторю
+        инженеров, развиваю сообщество SRE.
+      </p>
+
+      <blockquote class="about__quote">
+        Знаю, как больно смотреть на счёт за Elastic и понимать, что половина
+        логов — это мусор. Помогаю навести порядок без революций и увольнения
+        текущей команды.
+      </blockquote>
+
+      <ul class="about__links">
+        {
+          aboutLinks.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                {...(link.external ? { target: '_blank', rel: 'noopener' } : {})}
+              >
+                {link.label}
+                {link.external && <span aria-hidden="true">↗</span>}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div class="about__photo-wrap">
+      <picture>
+        <source
+          srcset={photoSrcset}
+          type="image/webp"
+        />
+        <img
+          class="about__photo"
+          src={withBase('images/stage-photo-600.webp')}
+          alt="Дмитрий Синявский выступает с докладом на DevOpsConf"
+          loading="lazy"
+          decoding="async"
+        />
+      </picture>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about__inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+
+  @media (min-width: 768px) {
+    .about__inner {
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+  }
+
+  .about__text p {
+    color: var(--color-text-secondary);
+    font-size: 1.05rem;
+    max-width: 60ch;
+    margin-bottom: 1.5rem;
+  }
+
+  .about__quote {
+    margin: 0 0 1.75rem;
+    padding: 0.85rem 1.25rem;
+    border-left: 4px solid var(--color-accent);
+    background: var(--color-bg-subtle);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    font-style: italic;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--color-text);
+    max-width: 60ch;
+  }
+
+  .about__links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+  }
+
+  .about__links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-weight: 500;
+    font-size: 0.95rem;
+  }
+
+  /* Photo column — landscape, preserves original aspect ratio */
+  .about__photo-wrap {
+    display: flex;
+    justify-content: center;
+  }
+
+  @media (min-width: 768px) {
+    .about__photo-wrap {
+      justify-content: flex-end;
+    }
+  }
+
+  .about__photo {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    display: block;
+  }
+
+  /* Mobile: full container width, tight margins */
+  @media (max-width: 767px) {
+    .about__photo-wrap {
+      margin-inline: -4px;
+    }
+  }
+</style>

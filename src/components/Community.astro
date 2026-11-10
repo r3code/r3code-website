@@ -1,0 +1,114 @@
+---
+/**
+ * Community — "Где меня читают и слушают".
+ *
+ * Channels (ALLSLO + Летит Кит) + companies where community members work.
+ * Positioned between Process and Cases on the homepage.
+ */
+import { CHANNELS } from '../consts';
+---
+
+<section class="section community" id="community" aria-labelledby="community-title">
+  <div class="container">
+    <div class="section__head">
+      <h2 id="community-title">Где меня читают и слушают</h2>
+    </div>
+
+    <p class="community__text">
+      Основатель чата
+      <a href={CHANNELS.allslo.url} onclick="reachGoal('click_telegram_channel_allslo')">
+        @{CHANNELS.allslo.handle}
+      </a>
+      (250+ SRE-инженеров, живой обмен опытом) и автор канала
+      <a href={CHANNELS.letitkit.url} onclick="reachGoal('click_telegram_channel_letitkit')">«{CHANNELS.letitkit.title}»</a>.
+      В сообществе участвуют инженеры из VK, Купер, Авито, Яндекс, Ozon, Т-Банк
+      и других компаний.
+    </p>
+
+    {CHANNELS.allslo.companies && CHANNELS.allslo.companies.length > 0 && (
+      <div class="community__companies">
+        <span class="community__companies-label">Аудитория — инженеры, CTO из:</span>
+        <div class="community__companies-list">
+          {CHANNELS.allslo.companies.map((company) => (
+            <span class="company-tag">{company}</span>
+          ))}
+          <span class="company-tag company-tag--muted">и другие</span>
+        </div>
+      </div>
+    )}
+
+    <p class="community__pub">
+      Участник сообщества
+      <a href={CHANNELS.srePub.url}>@{CHANNELS.srePub.handle}</a>
+    </p>
+  </div>
+</section>
+
+<style>
+  .community {
+    background: var(--color-bg-subtle);
+    border-block: 1px solid var(--color-border);
+  }
+
+  .community__text {
+    color: var(--color-text-secondary);
+    font-size: 1.05rem;
+    line-height: 1.65;
+    max-width: 70ch;
+    margin-bottom: 1.5rem;
+  }
+
+  .community__text a {
+    font-weight: 500;
+  }
+
+  .community__companies {
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .community__companies-label {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+  }
+
+  .community__companies-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .company-tag {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--color-accent);
+    background: var(--color-accent-soft);
+    border: 1px solid var(--color-accent-border);
+    padding: 0.2rem 0.55rem;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  .company-tag--muted {
+    color: var(--color-text-muted);
+    background: var(--color-bg-muted);
+    border-color: var(--color-border);
+    font-style: italic;
+  }
+
+  .community__pub {
+    color: var(--color-text-secondary);
+    font-size: 0.95rem;
+    margin: 0;
+  }
+
+  .community__pub a {
+    font-family: var(--font-mono);
+    font-weight: 500;
+  }
+</style>

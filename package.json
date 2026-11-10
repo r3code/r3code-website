@@ -1,0 +1,19 @@
+{
+  "name": "r3code-website",
+  "type": "module",
+  "version": "0.1.0",
+  "description": "Lead-generation landing for Dmitry Sinyavsky (r3code) — SRE consulting: log cost optimization, AI-Ready Observability, SLO audit.",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^5.1.1",
+    "@astrojs/sitemap": "^3.2.1",
+    "@astrojs/check": "^0.9.4",
+    "typescript": "^5.7.2"
+  }
+}

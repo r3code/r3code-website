@@ -1,0 +1,265 @@
+---
+/**
+ * Hero — first screen.
+ *
+ * Layout:
+ *   - Eyebrow (`~/r3code $ SRE · ...`) at the very top (above photo on mobile,
+ *     above H1 on desktop).
+ *   - Photo (responsive WebP with Retina srcset 1x/2x/3x).
+ *     - Mobile: 200x200, centered, between eyebrow and H1.
+ *     - Desktop (>=768px): 280x280, right column.
+ *   - H1, subtitle, CTA buttons, trust note — left column.
+ */
+import { CONTACTS, withBase } from '../consts';
+
+// Retina-aware srcset builders. Browser picks based on DPR + viewport.
+const desktopSrcset = [
+  `${withBase('images/hero-photo-280.webp')} 1x`,
+  `${withBase('images/hero-photo-560.webp')} 2x`,
+  `${withBase('images/hero-photo-840.webp')} 3x`,
+].join(', ');
+
+const mobileSrcset = [
+  `${withBase('images/hero-photo-200.webp')} 1x`,
+  `${withBase('images/hero-photo-400.webp')} 2x`,
+  `${withBase('images/hero-photo-600.webp')} 3x`,
+].join(', ');
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="container hero__inner">
+    {/* Eyebrow at the very top, full-width above everything */}
+    <p class="hero__eyebrow">
+      <span class="hero__terminal-prompt" aria-hidden="true">~/r3code $</span>
+      <span class="hero__eyebrow-text">SRE · Observability · AI-Ready Telemetry</span>
+    </p>
+
+    <div class="hero__content">
+      <h1 id="hero-title" class="hero__title">
+        Кейсы и опыт внедрения SRE
+        <span class="hero__title-accent">От сокращения затрат на логи в 3–5 раз до AI-Ready Observability</span>
+      </h1>
+
+      <p class="hero__subtitle">
+        Дмитрий Синявский — SRE-практик, ментор, спикер.<br />
+        Член программных комитетов DevOpsConf и Observability Conf.<br />
+        Основатель чата
+        <a href="https://t.me/allslo_ru" onclick="reachGoal('click_telegram_channel_allslo')">ALLSLO</a> (250+ SRE-инженеров, живой обмен опытом) и автор канала
+        <a href="https://t.me/letitkit" onclick="reachGoal('click_telegram_channel_letitkit')">«Летит Кит»</a>.
+      </p>
+
+      <div class="hero__cta">
+        <a class="btn btn--ghost btn--lg" href={withBase('#services')}>
+          Смотреть кейсы
+        </a>
+        <a class="btn btn--ghost btn--lg" href={withBase('#talks')}>
+          Смотреть доклады
+        </a>
+      </div>
+    </div>
+
+    <aside class="hero__photo-wrap">
+      <picture>
+        {/* Desktop: 280x280 with 2x/3x Retina sources */}
+        <source
+          srcset={desktopSrcset}
+          media="(min-width: 768px)"
+          type="image/webp"
+          width="280"
+          height="280"
+        />
+        {/* Mobile: 200x200 with 2x/3x Retina sources */}
+        <source
+          srcset={mobileSrcset}
+          type="image/webp"
+          width="200"
+          height="200"
+        />
+        <img
+          class="hero__photo"
+          src={withBase('images/hero-photo-200.webp')}
+          alt="Дмитрий Синявский (r3code) — SRE-инженер, спикер, ментор"
+          width="200"
+          height="200"
+          loading="eager"
+          decoding="async"
+        />
+      </picture>
+    </aside>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding-block: 2rem 3rem;
+    background:
+    linear-gradient(to bottom, var(--color-bg-subtle) 0%, var(--color-bg) 100%);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  @media (min-width: 768px) {
+    .hero {
+      padding-block: 3rem 5rem;
+    }
+  }
+
+  /* Grid: eyebrow spans full width on top, then content + photo below.
+     On desktop (≥768px) photo is aligned to the top edge of the content
+     column so it sits next to the H1, not vertically centered. */
+  .hero__inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  @media (min-width: 768px) {
+    .hero__inner {
+      align-items: start;
+    }
+  }
+
+  /* Eyebrow takes the first row, full width */
+  .hero__eyebrow {
+    grid-column: 1 / -1;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  @media (min-width: 768px) {
+    .hero__inner {
+      grid-template-columns: 1.2fr 1fr;
+      gap: 4rem;
+      /* eyebrow still spans full width on top */
+      grid-template-areas:
+        "eyebrow eyebrow"
+        "content photo";
+    }
+
+    .hero__eyebrow {
+      grid-area: eyebrow;
+    }
+
+    .hero__content {
+      grid-area: content;
+    }
+
+    .hero__photo-wrap {
+      grid-area: photo;
+    }
+  }
+
+  /* Mobile: ensure content + photo stack with photo between eyebrow and H1 */
+  @media (max-width: 767px) {
+    .hero__inner {
+      grid-template-areas:
+        "eyebrow"
+        "photo"
+        "content";
+    }
+
+    .hero__eyebrow { grid-area: eyebrow; }
+    .hero__photo-wrap { grid-area: photo; }
+    .hero__content { grid-area: content; }
+  }
+
+  /* Grid items default to `min-width: auto`, which means they refuse to
+     shrink below the min-content width of their descendants. */
+  .hero__content {
+    min-width: 0;
+  }
+
+  .hero__terminal-prompt {
+    color: var(--color-accent);
+    font-weight: 600;
+  }
+
+  .hero__eyebrow-text {
+    letter-spacing: 0.04em;
+  }
+
+  .hero__title {
+    font-size: clamp(2.2rem, 4.5vw + 0.5rem, 3.5rem);
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero__title-accent {
+    color: var(--color-accent);
+    display: block;
+  }
+
+  .hero__subtitle {
+    font-size: 1.15rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+    max-width: 62ch;
+    margin-bottom: 2rem;
+  }
+
+  .hero__subtitle a {
+    font-weight: 500;
+  }
+
+  .hero__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .hero__cta-primary {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  @media (max-width: 540px) {
+    .hero__cta .btn {
+      width: 100%;
+      white-space: normal;
+    }
+  }
+
+  .hero__note {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  /* Photo: mobile = 200x200 centered, desktop = 280x280 right-aligned */
+  .hero__photo-wrap {
+    display: flex;
+    justify-content: center;
+  }
+
+  .hero__photo {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
+    /* No border, no shadow per spec */
+    display: block;
+  }
+
+  @media (min-width: 768px) {
+    .hero__photo-wrap {
+      justify-content: flex-end;
+    }
+
+    .hero__photo {
+      width: 280px;
+      height: 280px;
+    }
+  }
+</style>

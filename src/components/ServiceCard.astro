@@ -1,0 +1,215 @@
+---
+/**
+ * ServiceCard — single product card.
+ *
+ * Featured variant (first card) gets text-only badge "ТОП-ЗАПРОС 2026"
+ * above the title. No emojis — strict engineering aesthetic.
+ */
+import type { ServiceItem } from '../consts';
+import { withBase } from '../consts';
+
+interface Props {
+  service: ServiceItem;
+}
+
+const { service } = Astro.props;
+
+/** Convert `inline code` markdown to <code> tags. */
+function mdInline(s: string): string {
+  // Escape angle brackets first to avoid HTML injection.
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/`([^`]+)`/g, '<code>$1</code>');
+}
+---
+
+<article
+  class:list={['card', 'service-card', { 'card--featured': service.featured }]}
+  id={service.id}
+  aria-labelledby={`${service.id}-title`}
+>
+  {service.featured && <span class="service-card__top-tag">ТОП-ЗАПРОС 2026</span>}
+
+  <h3 class="card__title h3" id={`${service.id}-title`}>{service.title}</h3>
+  <p class="card__subtitle">{service.subtitle}</p>
+  <p class="card__body">{service.description}</p>
+
+  {service.details.length > 0 && (
+    <ul class="checklist">
+      {
+        service.details.map((detail) => (
+          <li set:html={mdInline(detail)} />
+        ))
+      }
+    </ul>
+  )}
+
+  {service.caseStudy && (
+    <div class="case-study">
+      <p class="case-study__title">{service.caseStudy.title}</p>
+      <div class="case-study__group case-study__group--before">
+        <p class="case-study__group-label">Было</p>
+        <ul class="case-study__list">
+          {service.caseStudy.beforePoints.map((point) => (
+            <li class="case-study__point case-study__point--before">{point}</li>
+          ))}
+        </ul>
+      </div>
+      <div class="case-study__group case-study__group--after">
+        <p class="case-study__group-label">Стало</p>
+        <ul class="case-study__list">
+          {service.caseStudy.afterPoints.map((point) => (
+            <li class="case-study__point case-study__point--after">{point}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  )}
+
+  <a
+    class="btn btn--primary service-card__cta"
+    href={service.cta.href.startsWith('http') ? service.cta.href : withBase(service.cta.href)}
+    aria-label={`${service.cta.label} — ${service.title}`}
+    {...(service.cta.href.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {})}
+    {...(service.ctaGoal ? { onclick: `reachGoal('${service.ctaGoal}')` } : {})}
+  >
+    {service.cta.label}
+    <span aria-hidden="true">→</span>
+  </a>
+</article>
+
+<style>
+  .service-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  /* Text-only top tag for featured card (replaces emoji badge) */
+  .service-card__top-tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.75rem;
+    /* No background, no border — strict engineering style per spec */
+  }
+
+  .service-card__cta {
+    margin-top: auto;
+    align-self: flex-start;
+    margin-top: 1rem;
+    white-space: normal;
+    max-width: 100%;
+  }
+
+  /* Inline code inside checklist items needs vertical rhythm */
+  .service-card .checklist li {
+    padding-top: 0.1rem;
+    font-size: 14px;
+    color: #374151;
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+
+  .service-card .checklist li:last-child {
+    margin-bottom: 0;
+  }
+
+  .h3 {
+    font-size: 1.35rem;
+  }
+
+  /* Real-world case study block (featured card only).
+     Per spec: numbers are the main selling element — bigger font,
+     bold, subtle bg #f9fafb, padding 16px. */
+  .case-study {
+    margin-top: 1.25rem;
+    padding: 16px;
+    background: #f9fafb;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+  }
+
+  .case-study__title {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-accent);
+    font-weight: 700;
+    margin: 0 0 0.75rem;
+  }
+
+  .case-study__group {
+    margin-bottom: 0.6rem;
+  }
+
+  .case-study__group:last-child {
+    margin-bottom: 0;
+  }
+
+  .case-study__group-label {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+    font-weight: 600;
+    margin: 0 0 0.3rem;
+  }
+
+  .case-study__group--after .case-study__group-label {
+    color: var(--color-accent);
+  }
+
+  .case-study__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .case-study__point {
+    position: relative;
+    padding-left: 1rem;
+    margin-bottom: 0.4rem;
+    /* Per spec: numbers font 16-18px, bold */
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.45;
+    color: var(--color-text-secondary);
+  }
+
+  .case-study__point:last-child {
+    margin-bottom: 0;
+  }
+
+  .case-study__point::before {
+    content: '·';
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--color-text-muted);
+    font-weight: 700;
+  }
+
+  .case-study__point--before {
+    color: var(--color-text-secondary);
+  }
+
+  .case-study__point--after {
+    color: var(--color-text);
+  }
+
+  .case-study__point--after::before {
+    color: var(--color-accent);
+    content: '→';
+    font-size: 0.85rem;
+    top: 0.1rem;
+  }
+</style>

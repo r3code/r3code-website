@@ -1,0 +1,41 @@
+---
+/**
+ * Homepage — lead-generation landing.
+ *
+ * Section order:
+ *   1. Hero
+ *   2. SocialProof (conferences + PC memberships only)
+ *   3. Services (log optimization → AI-Ready Obs → SLO)
+ *   4. Process (Как мы будем работать)
+ *   5. LeadMagnet (Чек-лист)
+ *   6. Community (Где меня читают и слушают)
+ *   7. Cases (Доклады — топ-3)
+ *   8. Tools (Инструменты и ресурсы)
+ *   9. About (Обо мне — фото + текст + цитата)
+ *  10. ExpertSupport (Экспертная поддержка — last CTA)
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import SocialProof from '../components/SocialProof.astro';
+import Services from '../components/Services.astro';
+import CaseStudy from '../components/CaseStudy.astro';
+import LeadMagnet from '../components/LeadMagnet.astro';
+import Community from '../components/Community.astro';
+import Cases from '../components/Cases.astro';
+import Tools from '../components/Tools.astro';
+import About from '../components/About.astro';
+import ExpertSupport from '../components/ExpertSupport.astro';
+---
+
+<BaseLayout>
+  <Hero />
+  <SocialProof />
+  <Services />
+  <CaseStudy />
+  <LeadMagnet />
+  <Community />
+  <Cases />
+  <Tools />
+  <About />
+  <ExpertSupport />
+</BaseLayout>

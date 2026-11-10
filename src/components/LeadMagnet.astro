@@ -1,0 +1,60 @@
+---
+/**
+ * LeadMagnet — checklist CTA section, visually distinct (accent background).
+ *
+ * Telegram deep link with prefilled message ("AI-чеклист").
+ */
+import { LEAD_MAGNET } from '../consts';
+---
+
+<section class="section section--accent lead-magnet" id="lead-magnet" aria-labelledby="lead-magnet-title">
+  <div class="container">
+    <div class="lead-magnet__body">
+      <h2 id="lead-magnet-title" class="lead-magnet__title">{LEAD_MAGNET.title}</h2>
+      <p class="lead-magnet__text">{LEAD_MAGNET.body}</p>
+
+      <div class="lead-magnet__cta">
+        <a
+          class="btn btn--ghost btn--lg"
+          href={LEAD_MAGNET.ctaHref}
+          target="_blank"
+          rel="noopener"
+          onclick="reachGoal('cta_lead_magnet_checklist')"
+        >
+          {LEAD_MAGNET.ctaLabel}
+          <span aria-hidden="true">→</span>
+        </a>
+        {LEAD_MAGNET.footnote && (
+          <p class="lead-magnet__note">{LEAD_MAGNET.footnote}</p>
+        )}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .lead-magnet__title {
+    font-size: clamp(1.6rem, 1.5vw + 1rem, 2rem);
+    margin-bottom: 0.75rem;
+  }
+
+  .lead-magnet__text {
+    font-size: 1.05rem;
+    color: var(--color-text-secondary);
+    max-width: 68ch;
+    margin-bottom: 1.5rem;
+  }
+
+  .lead-magnet__cta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+
+  .lead-magnet__note {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+</style>
