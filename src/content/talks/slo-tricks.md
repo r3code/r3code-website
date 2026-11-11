@@ -12,6 +12,7 @@ role: speaker
 abstract: 'https://devopsconf.io/moscow/2026/abstracts/17164'
 featured: true
 teaser: 'Разбор типовых ловушек проектирования и измерения SLO: gaming индикаторов, синдром «всё зелёное, а бизнес страдает». Топ-4 доклад DevOpsConf 2026 по оценке участников (4.86/5).'
+subtitle: 'SLI/SLO'
 ---
 
 ## О докладе

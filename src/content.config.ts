@@ -58,6 +58,8 @@ const talks = defineCollection({
     featured: z.boolean().default(false),
     /** Short teaser for cards (1 sentence). Auto-generated from body if absent. */
     teaser: z.string().optional(),
+    /** Technology keywords for card subtitle (e.g. "Vector + ClickHouse"). */
+    subtitle: z.string().optional(),
   }),
 });
 

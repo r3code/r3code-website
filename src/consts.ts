@@ -389,4 +389,10 @@ export const LEAD_MAGNET = {
  * The homepage card pulls the talk's title/venue/rating/teaser from the
  * content collection — these are just ordering hints.
  */
-export const FEATURED_TALK_SLUGS = ['slo-tricks', 'log-chaos-taming', 'slo-dwarves'] as const;
+export const FEATURED_TALK_SLUGS = [
+  'efk-to-vector-clickhouse',
+  'logs-standardization-obsconf-2026',
+  'slo-tricks',
+  'log-chaos-taming',
+  'slo-dwarves',
+] as const;

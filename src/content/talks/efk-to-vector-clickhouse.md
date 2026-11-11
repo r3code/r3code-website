@@ -11,7 +11,8 @@ role: speaker
 abstract: 'https://devopsconf.io/moscow/2024/abstracts/11564'
 videos:
   - { platform: YouTube, url: 'https://www.youtube.com/watch?v=4Xu-DaGkldU' }
-teaser: 'Первый доклад из серии про миграцию с EFK: почему классический стек логирования перестал справляться и к чему мы пришли.'
+teaser: 'Кейс ВсеИнструменты.ру: перевод прод-сервисов на Vector+ClickHouse вместо Elastic. Результат: железо в 2 раза меньше, место под лог в 10 раз меньше, хранение 4 дня вместо 5 часов, доставка 99.98–100%.'
+subtitle: 'Vector + ClickHouse'
 ---
 
 ## О докладе

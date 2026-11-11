@@ -16,6 +16,7 @@ videos:
   - { platform: 'VK Видео', url: 'https://vkvideo.ru/video-163333847_456239934?list=ln-Zu57y3zqrzJjmSTHjn' }
 featured: true
 teaser: 'Двухлетний опыт миграции с EFK на открытый стек Vector + OpenTelemetry + ClickHouse: что работает, что ломается, какие экономические итоги.'
+subtitle: 'OpenTelemetry + Vector + ClickHouse'
 ---
 
 ## О докладе

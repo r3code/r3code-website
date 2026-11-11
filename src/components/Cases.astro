@@ -24,15 +24,15 @@ const talkUrl = (slug: string) => `${talkHref(slug)}`;
     <div class="section__head">
       <h2 id="talks-section-title">Доклады</h2>
       <p class="section__lead">
-        Топ-3 доклада по оценкам участников. Полный список — на отдельной
-        странице со ссылками на видео, презентации и материалы.
+        Полный список докладов — на отдельной странице со ссылками на видео,
+        презентации и материалы.
       </p>
     </div>
 
     <ul class="cases__grid">
       {
         featuredTalks.map((talk) => {
-          const { title, venue, rating, teaser } = talk.data;
+          const { title, venue, rating, teaser, subtitle } = talk.data;
           return (
             <li class="case-card">
               <article>
@@ -47,6 +47,7 @@ const talkUrl = (slug: string) => `${talkHref(slug)}`;
                     </span>
                   )}
                 </header>
+                {subtitle && <p class="case-card__subtitle">{subtitle}</p>}
                 <h3 class="case-card__title">
                   <a href={talkUrl(talk.id)}>{title}</a>
                 </h3>
@@ -127,6 +128,14 @@ const talkUrl = (slug: string) => `${talkHref(slug)}`;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--color-accent);
+  }
+
+  .case-card__subtitle {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--color-accent);
+    margin-bottom: 0.5rem;
+    font-weight: 600;
   }
 
   .case-card__rating {

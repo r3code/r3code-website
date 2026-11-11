@@ -16,6 +16,7 @@ videos:
   - { platform: 'VK Видео', url: 'https://vkvideo.ru/video-152308462_456242591?list=ln-jPvULPxbZh6VxwIFwa' }
 featured: true
 teaser: 'Откуда брать SLI/SLO в реальной инфраструктуре: источники данных, инструменты, типовые грабли и как быстро сделать MVP без переделки всей системы.'
+subtitle: 'SLI/SLO + Grafana + Шаблоны'
 ---
 
 ## О докладе

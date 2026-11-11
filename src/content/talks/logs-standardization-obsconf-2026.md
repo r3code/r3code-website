@@ -7,7 +7,8 @@ date: '2026-03-19'
 venueUrl: 'https://observability-conf.ru/'
 role: speaker
 slides: 'https://docs.google.com/presentation/d/1Hk-eW3izx1UchKG5m7ghrOvIQa40x1DPYuS2X4CpnOE/edit?slide=id.g3bfc3532baa_0_39#slide=id.g3bfc3532baa_0_39'
-teaser: 'Построение единого пайплайна логирования на открытом стеке: миграция с EFK, схема источников, разделение по TTL, пост-анализ бизнес-ошибок.'
+teaser: 'Проблема: без стандартизации телеметрии AI-агенты галлюцинируют при разборе инцидентов. Подход: каталог сервисов, OTel semconv, предсказуемость имён, структура трейсов, MCP-доступность.'
+subtitle: 'OpenTelemetry + ClickHouse + MCP'
 ---
 
 ## О докладе
