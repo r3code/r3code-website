@@ -390,9 +390,9 @@ export const LEAD_MAGNET = {
  * content collection — these are just ordering hints.
  */
 export const FEATURED_TALK_SLUGS = [
-  'efk-to-vector-clickhouse',
-  'logs-standardization-obsconf-2026',
-  'slo-tricks',
-  'log-chaos-taming',
-  'slo-dwarves',
+  'slo-tricks',                        // 2026-04-08
+  'logs-standardization-obsconf-2026', // 2026-03-19
+  'slo-dwarves',                        // 2025-06-23
+  'log-chaos-taming',                  // 2025-04-08
+  'efk-to-vector-clickhouse',          // 2024 (no exact date)
 ] as const;
