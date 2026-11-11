@@ -47,10 +47,10 @@ const talkUrl = (slug: string) => `${talkHref(slug)}`;
                     </span>
                   )}
                 </header>
-                {subtitle && <p class="case-card__subtitle">{subtitle}</p>}
                 <h3 class="case-card__title">
                   <a href={talkUrl(talk.id)}>{title}</a>
                 </h3>
+                {subtitle && <p class="case-card__subtitle">{subtitle}</p>}
                 <p class="case-card__note">{teaser}</p>
                 <a
                   class="case-card__link"
