@@ -31,8 +31,8 @@ interface Props {
 }
 
 const {
-  title = 'Дмитрий Синявский — SRE-практика: оптимизация логов, SLO, AI-Ready Observability | r3code.ru',
-  description = 'Кейсы, доклады и open-source инструменты по SRE. Реальный опыт миграции с Elastic-стек на Vector+ClickHouse и подготовки телеметрии для AI. Шаблоны и фреймворки для инженеров и CTO.',
+  title = SITE.defaultTitle,
+  description = SITE.defaultDescription,
   ogImage = SITE.ogImage,
   canonical,
   noindex = false,
@@ -102,7 +102,7 @@ const websiteJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   url: 'https://r3code.ru',
-  name: 'Дмитрий Синявский — SRE-практика: оптимизация логов, SLO, AI-Ready Observability',
+  name: SITE.defaultTitle,
   inLanguage: 'ru-RU',
   author: { '@type': 'Person', name: 'Дмитрий Синявский' },
 };
@@ -136,7 +136,7 @@ const jsonLdBlocks = [websiteJsonLd, personJsonLd, servicesJsonLd];
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="ru_RU" />
-    <meta property="og:site_name" content="Дмитрий Синявский — SRE-практика и артефакты" />
+    <meta property="og:site_name" content={SITE.siteName} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />

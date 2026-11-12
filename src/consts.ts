@@ -22,6 +22,14 @@ export const SITE = {
   ogImage: '/og.jpg',
   /** Twitter handle (without @). */
   twitterHandle: '',
+  /** Default <title> for the homepage. Also used as JSON-LD WebSite.name (single source of truth). */
+  defaultTitle:
+    'Дмитрий Синявский — SRE-практик: от оптимизации логов и SLO до AI-Ready Observability | r3code.ru',
+  /** Default meta description for the homepage. */
+  defaultDescription:
+    'От оптимизации логов и SLO до AI-Ready Observability. Реальный опыт выстраивания SRE-процессов, миграции на Vector+ClickHouse и открытые инструменты для инженеров',
+  /** Site name shown in og:site_name (short brand label). */
+  siteName: 'Дмитрий Синявский — SRE-практик',
 } as const;
 
 /**
