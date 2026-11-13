@@ -183,10 +183,9 @@ const jsonLdBlocks = [websiteJsonLd, personJsonLd, servicesJsonLd];
 
     <script>
       // IntersectionObserver for scroll-based Metrika goals.
-      // Tracks when user scrolls to key sections: services, expert-support, tools.
+      // Tracks when user scrolls to key sections: expert-support, tools.
       // Each goal fires only once per page load (set in 'fired' Set).
       const scrollGoals = [
-        { selector: '#services', goal: 'scroll_to_services' },
         { selector: '#expert-support', goal: 'scroll_to_expert_support' },
         { selector: '#tools', goal: 'view_tools_section' },
       ];
