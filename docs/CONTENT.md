@@ -6,14 +6,14 @@
 |---|---|---|
 | Контакты (Telegram, email, GetMentor, GitHub, Habr) | `src/consts.ts` → `CONTACTS` | Object literal |
 | Каналы (ALLSLO, Летит Кит, SRE Pub) | `src/consts.ts` → `CHANNELS` | Object literal |
-| Конференции в SocialProof | `src/consts.ts` → `CONFERENCES` | Array of objects |
+| Конференции в Conferences | `src/consts.ts` → `CONFERENCES` | Array of objects |
 | Программные комитеты | `src/consts.ts` → `PC_MEMBERSHIPS` | Array of objects |
 | Анонсы будущих докладов | `src/consts.ts` → `TALKS_ANNOUNCED` | Array of objects |
-| Услуги (3 карточки) | `src/consts.ts` → `SERVICES` | Array of `ServiceItem` |
+| Артефакты (3 карточки) | `src/consts.ts` → `ARTIFACTS` | Array of `ArtifactItem` |
 | Экспертная поддержка | `src/consts.ts` → `EXPERT_SUPPORT` | Object literal |
 | Инструменты и open-source | `src/consts.ts` → `TOOLS_RESOURCES` | Array of `ToolGroup` |
-| Лид-магнит (чек-лист) | `src/consts.ts` → `LEAD_MAGNET` | Object literal |
-| Топ-3 доклада (Cases на главной) | `src/consts.ts` → `FEATURED_TALK_SLUGS` | Array of slugs |
+| Чек-лист | `src/consts.ts` → `CHECKLIST` | Object literal |
+| Featured talks на главной | `src/consts.ts` → `FEATURED_TALK_SLUGS` | Array of slugs |
 | **Доклады (детальные страницы)** | `src/content/talks/<slug>.md` | Markdown + YAML frontmatter |
 
 ## Добавить новый доклад
@@ -82,30 +82,27 @@ Markdown-тело. H2 заголовки рендерятся. Списки, **b
 | `getmentorUrl` | Профиль GetMentor |
 | `githubUrl` | Профиль GitHub |
 | `habrUrl` | Список статей на Habr |
-| `habrCareerUrl` | Резюме на Habr Career (`career.habr.com/...`) |
 | `linkedinUrl` | Профиль LinkedIn |
 
-**Не путать:** `habrUrl` (статьи) и `habrCareerUrl` (резюме) — разные URL.
+## Добавить артефакт
 
-## Добавить услугу
-
-В `src/consts.ts` → `SERVICES`. Порядок важен: featured-карточка первая.
+В `src/consts.ts` → `ARTIFACTS`. Порядок важен: featured-карточка первая.
 
 ```ts
 {
-  id: 'slug-услуги',
-  icon: '🎯',             // emoji
+  id: 'slug-артефакта',
+  icon: '',                // поле есть, но emoji не используем — strict engineering
   title: 'Заголовок',
   subtitle: 'Подзаголовок',
   description: '2–3 предложения',
   details: ['Пункт 1', 'Пункт 2', 'Пункт 3'],
-  cta: { label: 'Обсудить проект', href: CONTACTS.telegramUrl },
+  cta: { label: 'Смотреть доклад по теме', href: 'talks/<slug>/' },
   featured: false,        // true только для первой карточки
-  serviceType: 'Service type (для JSON-LD)',
-  caseStudy: {             // опционально, только для featured
+  serviceType: 'Schema.org/Service type (для JSON-LD)',
+  caseStudy: {           // опционально, только для featured
     title: 'Реальный кейс (Компания)',
-    before: '...',
-    after: '...',
+    beforePoints: ['...'],
+    afterPoints: ['...'],
   },
 }
 ```

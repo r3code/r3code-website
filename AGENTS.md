@@ -83,7 +83,7 @@ docs/                     — детальные документы (progressive
 - TypeScript strict, никаких `any` без явного комментария.
 - Astro-компоненты — scoped styles внутри `<style>` тега.
 - Именование классов — БЭМ-подобное: `block__element--modifier`.
-- Имена файлов компонентов — PascalCase (Hero.astro, ServiceCard.astro).
+- Имена файлов компонентов — PascalCase (Hero.astro, ArtifactCard.astro).
 - Имена контент-файлов в `talks/` — kebab-case (slo-tricks.md).
 - Коммиты — conventional-commits на русском: `Fix: …`, `Add: …`, `Update: …`.
 

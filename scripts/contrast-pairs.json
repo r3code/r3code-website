@@ -44,7 +44,7 @@
       "id": "text-muted-on-subtle",
       "fg": "#636b78",
       "bg": "#f8fafc",
-      "context": "Muted text on SocialProof/Mentorship subtle bg sections",
+      "context": "Muted text on Conferences/Mentorship subtle bg sections",
       "largeText": false
     },
     {
@@ -65,7 +65,7 @@
       "id": "accent-on-accent-soft",
       "fg": "#0058e0",
       "bg": "#eff6ff",
-      "context": "Accent text on accent-soft bg (PC memberships, LeadMagnet bg)",
+      "context": "Accent text on accent-soft bg (PC memberships, Checklist bg)",
       "largeText": false
     },
     {
@@ -79,21 +79,21 @@
       "id": "text-on-bg-subtle",
       "fg": "#1a1a1a",
       "bg": "#f8fafc",
-      "context": "Body text on subtle-bg sections (SocialProof, Mentorship, About quote)",
+      "context": "Body text on subtle-bg sections (Conferences, Mentorship, About quote)",
       "largeText": false
     },
     {
       "id": "text-secondary-on-accent-soft",
       "fg": "#475569",
       "bg": "#eff6ff",
-      "context": "Hero note-style text on accent-soft bg (LeadMagnet footnote)",
+      "context": "Hero note-style text on accent-soft bg (Checklist footnote)",
       "largeText": false
     },
     {
       "id": "company-tag-on-accent-soft",
       "fg": "#0058e0",
       "bg": "#eff6ff",
-      "context": "Company tag chips in SocialProof (accent text on accent-soft)",
+      "context": "Company tag chips in Conferences (accent text on accent-soft)",
       "largeText": false
     },
     {

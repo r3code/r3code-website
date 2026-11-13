@@ -8,14 +8,14 @@
 | Токен | Hex | Назначение |
 |---|---|---|
 | `--color-bg` | `#ffffff` | Основной фон |
-| `--color-bg-subtle` | `#f8fafc` | Subtle-секции (SocialProof, Mentorship, About) |
+| `--color-bg-subtle` | `#f8fafc` | Subtle-секции (Conferences, Mentorship, About) |
 | `--color-bg-muted` | `#f1f5f9` | Muted-карточки, плашки |
 | `--color-text` | `#1a1a1a` | Основной текст |
 | `--color-text-secondary` | `#475569` | Подзаголовки, body в карточках |
 | `--color-text-muted` | `#636b78` | Мелкие подписи, даты |
 | `--color-accent` | `#0058e0` | Ссылки, CTA, акценты (WCAG AA: 6.05:1 на белом) |
 | `--color-accent-hover` | `#004ab8` | Hover-состояние accent |
-| `--color-accent-soft` | `#eff6ff` | LeadMagnet bg, PC memberships bg |
+| `--color-accent-soft` | `#eff6ff` | Checklist bg, PC memberships bg |
 | `--color-border` | `#e2e8f0` | Стандартная граница |
 | `--color-feature-badge` | `#ff6b00` | Бейдж «🔥 Горячая боль» |
 
@@ -47,8 +47,8 @@
 
 Примеры:
 - `.hero__title` — элемент `title` блока `hero`
-- `.case-study__row--before` — модификатор `before` элемента `row` блока `case-study`
-- `.badge__link`, `.case-card__head`, `.feed-item__video-badge`
+- `.artifact-case__point--before` — модификатор `before` элемента `point` блока `artifact-case`
+- `.badge__link`, `.talk-card__head`, `.feed-item__video-badge`
 
 ## Стиль копирайтинга
 
@@ -86,7 +86,7 @@
 - **TypeScript strict.** Никаких `any` без явного комментария-обоснования.
 - **Astro-компоненты** — scoped styles внутри `<style>`. Не выноси стили в
   `global.css`, если они используются только в одном компоненте.
-- **Имена файлов компонентов** — PascalCase: `Hero.astro`, `ServiceCard.astro`.
+- **Имена файлов компонентов** — PascalCase: `Hero.astro`, `ArtifactCard.astro`.
 - **Имена контент-файлов** (`talks/`) — kebab-case: `slo-tricks.md`.
 - **Коммиты** — на русском, с префиксом: `Fix: …`, `Add: …`, `Update: …`,
   `Refactor: …`, `Docs: …`.

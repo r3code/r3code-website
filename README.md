@@ -1,7 +1,7 @@
-# r3code.ru — SRE website, cases and artifacts
+# r3code.ru — SRE-практик: доклады, инструменты, артефакты
 
-Сайт Дмитрия Синявского (r3code) — кейсы, доклады и open-source
-инструменты по SRE. Astro 5, GitHub Pages.
+Сайт Дмитрия Синявского (r3code) — доклады, open-source инструменты и артефакты
+SRE-практики. Astro 5, GitHub Pages.
 
 ## Стек
 
@@ -52,7 +52,7 @@ Node 20+.
 
 ## Контент
 
-Все контакты, услуги, кейсы, конференции — в `src/consts.ts`.
+Все контакты, чек-лист, конференции, инструменты — в `src/consts.ts`.
 Доклады — в `src/content/talks/*.md` (Markdown + YAML frontmatter).
 
 Подробности: [docs/CONTENT.md](docs/CONTENT.md), [docs/STYLE.md](docs/STYLE.md).

@@ -59,8 +59,8 @@
 }
 ```
 
-### 3. ItemList of Services
-3 услуги как `ListItem` с `position` 1/2/3, каждый item — `Service` с
+### 3. ItemList of Artifacts (Schema.org/Service)
+3 артефакта как `ListItem` с `position` 1/2/3, каждый item — `Service` с
 `provider` (Person), `serviceType`, `url` (с якорем `#<id>`).
 
 ## Sitemap
