@@ -1,8 +1,8 @@
 ---
 /**
- * CaseStudy — "Реальный кейс: миграция с Elastic-стек на Vector + ClickHouse"
+ * CaseMigration — "Реальный кейс: миграция с Elastic-стек на Vector + ClickHouse"
  *
- * Standalone block between Services and Process.
+ * Standalone block between Artifacts and Process (when enabled).
  * Two columns: "Было" (red-tinted bg) vs "Стало" (green-tinted bg).
  * Numbers are bold (via <strong>), text is normal weight.
  * Points rendered as <ul> bullet lists.
@@ -22,27 +22,27 @@ const afterPoints = [
 ];
 ---
 
-<section class="section case-study-block" id="case-study" aria-labelledby="case-study-title">
+<section class="section case-migration" id="case-migration" aria-labelledby="case-migration-title">
   <div class="container">
     <div class="section__head">
-      <h3 id="case-study-title">Реальный кейс: миграция с Elastic-стек на Vector + ClickHouse (ВсеИнструменты.ру)</h3>
+      <h3 id="case-migration-title">Реальный кейс: миграция с Elastic-стек на Vector + ClickHouse (ВсеИнструменты.ру)</h3>
     </div>
 
-    <div class="case-study-block__grid">
-      <div class="case-study-block__col case-study-block__col--before">
-        <p class="case-study-block__label">Было</p>
-        <ul class="case-study-block__list">
+    <div class="case-migration__grid">
+      <div class="case-migration__col case-migration__col--before">
+        <p class="case-migration__label">Было</p>
+        <ul class="case-migration__list">
           {beforePoints.map((point) => (
-            <li class="case-study-block__point" set:html={point} />
+            <li class="case-migration__point" set:html={point} />
           ))}
         </ul>
       </div>
 
-      <div class="case-study-block__col case-study-block__col--after">
-        <p class="case-study-block__label">Стало</p>
-        <ul class="case-study-block__list">
+      <div class="case-migration__col case-migration__col--after">
+        <p class="case-migration__label">Стало</p>
+        <ul class="case-migration__list">
           {afterPoints.map((point) => (
-            <li class="case-study-block__point" set:html={point} />
+            <li class="case-migration__point" set:html={point} />
           ))}
         </ul>
       </div>
@@ -51,35 +51,35 @@ const afterPoints = [
 </section>
 
 <style>
-  .case-study-block__grid {
+  .case-migration__grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
 
   @media (min-width: 768px) {
-    .case-study-block__grid {
+    .case-migration__grid {
       grid-template-columns: 1fr 1fr;
       gap: 1.5rem;
     }
   }
 
-  .case-study-block__col {
+  .case-migration__col {
     padding: 24px;
     border-radius: 12px;
   }
 
-  .case-study-block__col--before {
+  .case-migration__col--before {
     background: #fef2f2;
     border: 1px solid #fecaca;
   }
 
-  .case-study-block__col--after {
+  .case-migration__col--after {
     background: #f0fdf4;
     border: 1px solid #bbf7d0;
   }
 
-  .case-study-block__label {
+  .case-migration__label {
     font-family: var(--font-mono);
     font-size: 0.85rem;
     text-transform: uppercase;
@@ -88,21 +88,21 @@ const afterPoints = [
     margin: 0 0 1rem;
   }
 
-  .case-study-block__col--before .case-study-block__label {
+  .case-migration__col--before .case-migration__label {
     color: #dc2626;
   }
 
-  .case-study-block__col--after .case-study-block__label {
+  .case-migration__col--after .case-migration__label {
     color: #16a34a;
   }
 
-  .case-study-block__list {
+  .case-migration__list {
     list-style: none;
     padding: 0;
     margin: 0;
   }
 
-  .case-study-block__point {
+  .case-migration__point {
     position: relative;
     padding-left: 1.25rem;
     font-size: 18px;
@@ -112,31 +112,31 @@ const afterPoints = [
     color: var(--color-text);
   }
 
-  .case-study-block__point:last-child {
+  .case-migration__point:last-child {
     margin-bottom: 0;
   }
 
-  .case-study-block__point::before {
+  .case-migration__point::before {
     content: '•';
     position: absolute;
     left: 0;
     top: 0;
   }
 
-  .case-study-block__col--before .case-study-block__point::before {
+  .case-migration__col--before .case-migration__point::before {
     color: #dc2626;
   }
 
-  .case-study-block__col--after .case-study-block__point::before {
+  .case-migration__col--after .case-migration__point::before {
     color: #16a34a;
   }
 
-  .case-study-block__point strong {
+  .case-migration__point strong {
     font-weight: 700;
   }
 
   @media (max-width: 767px) {
-    .case-study-block__point {
+    .case-migration__point {
       font-size: 16px;
     }
   }

@@ -197,14 +197,14 @@ export const HABR_ARTICLES = [
 ] as const;
 
 /**
- * Service offerings. Order matters: log cost optimization first
+ * Artifacts — practical cases and tools. Order matters: log cost optimization first
  * (hot pain), AI-Ready Observability second (growing trend),
  * SLO audit last (additional product).
  *
  * The first item is flagged with `featured: true` to be rendered as
  * the visually emphasized card.
  */
-export interface ServiceItem {
+export interface ArtifactItem {
   id: string;
   icon: string;
   title: string;
@@ -227,7 +227,7 @@ export interface ServiceItem {
   };
 }
 
-export const SERVICES: ServiceItem[] = [
+export const ARTIFACTS: ArtifactItem[] = [
   {
     id: 'log-cost-optimization',
     icon: '',
@@ -269,7 +269,7 @@ export const SERVICES: ServiceItem[] = [
   },
 ];
 
-/** Expert support & consulting block (was 'Mentoring 1-на-1'). */
+/** Expert support & consulting block. */
 export const EXPERT_SUPPORT = {
   title: 'Экспертная поддержка и менторство',
   lead: 'Делюсь опытом внедрения SRE через аудит и менторство.',
@@ -380,8 +380,8 @@ export const TOOLS_RESOURCES: ToolGroup[] = [
   },
 ];
 
-/** Lead magnet (checklist) deep-link trigger. */
-export const LEAD_MAGNET = {
+/** Checklist (SRE AI-Ready Observability checklist) deep-link trigger. */
+export const CHECKLIST = {
   title: 'Чек-лист: 7 шагов к AI-Ready Observability',
   body:
     'Готовите ли вы телеметрию для AI-агентов? Скачайте чек-лист из 7 пунктов: каталог сервисов, OTel semconv, предсказуемость имён, структура трейсов, MCP-доступность, бизнес-контекст, документация для AI.',
@@ -391,7 +391,7 @@ export const LEAD_MAGNET = {
 } as const;
 
 /**
- * Top-3 featured talks shown on the homepage "Кейсы и доклады" section.
+ * Featured talks shown on the homepage "Доклады" section.
  * `slug` matches the Markdown file in src/content/talks/<slug>.md.
  *
  * The homepage card pulls the talk's title/venue/rating/teaser from the

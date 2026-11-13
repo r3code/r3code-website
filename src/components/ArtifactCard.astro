@@ -1,18 +1,18 @@
 ---
 /**
- * ServiceCard — single product card.
+ * ArtifactCard — single product card.
  *
  * Featured variant (first card) gets text-only badge "ТОП-ЗАПРОС 2026"
  * above the title. No emojis — strict engineering aesthetic.
  */
-import type { ServiceItem } from '../consts';
+import type { ArtifactItem } from '../consts';
 import { withBase } from '../consts';
 
 interface Props {
-  service: ServiceItem;
+  artifact: ArtifactItem;
 }
 
-const { service } = Astro.props;
+const { artifact } = Astro.props;
 
 /** Convert `inline code` markdown to <code> tags. */
 function mdInline(s: string): string {
@@ -26,42 +26,42 @@ function mdInline(s: string): string {
 ---
 
 <article
-  class:list={['card', 'service-card', { 'card--featured': service.featured }]}
-  id={service.id}
-  aria-labelledby={`${service.id}-title`}
+  class:list={['card', 'artifact-card', { 'card--featured': artifact.featured }]}
+  id={artifact.id}
+  aria-labelledby={`${artifact.id}-title`}
 >
-  {service.featured && <span class="service-card__top-tag">ТОП-ЗАПРОС 2026</span>}
+  {artifact.featured && <span class="artifact-card__top-tag">ТОП-ЗАПРОС 2026</span>}
 
-  <h3 class="card__title h3" id={`${service.id}-title`}>{service.title}</h3>
-  <p class="card__subtitle">{service.subtitle}</p>
-  <p class="card__body">{service.description}</p>
+  <h3 class="card__title h3" id={`${artifact.id}-title`}>{artifact.title}</h3>
+  <p class="card__subtitle">{artifact.subtitle}</p>
+  <p class="card__body">{artifact.description}</p>
 
-  {service.details.length > 0 && (
+  {artifact.details.length > 0 && (
     <ul class="checklist">
       {
-        service.details.map((detail) => (
+        artifact.details.map((detail) => (
           <li set:html={mdInline(detail)} />
         ))
       }
     </ul>
   )}
 
-  {service.caseStudy && (
-    <div class="case-study">
-      <p class="case-study__title">{service.caseStudy.title}</p>
-      <div class="case-study__group case-study__group--before">
-        <p class="case-study__group-label">Было</p>
-        <ul class="case-study__list">
-          {service.caseStudy.beforePoints.map((point) => (
-            <li class="case-study__point case-study__point--before">{point}</li>
+  {artifact.caseStudy && (
+    <div class="artifact-case">
+      <p class="artifact-case__title">{artifact.caseStudy.title}</p>
+      <div class="artifact-case__group artifact-case__group--before">
+        <p class="artifact-case__group-label">Было</p>
+        <ul class="artifact-case__list">
+          {artifact.caseStudy.beforePoints.map((point) => (
+            <li class="artifact-case__point artifact-case__point--before">{point}</li>
           ))}
         </ul>
       </div>
-      <div class="case-study__group case-study__group--after">
-        <p class="case-study__group-label">Стало</p>
-        <ul class="case-study__list">
-          {service.caseStudy.afterPoints.map((point) => (
-            <li class="case-study__point case-study__point--after">{point}</li>
+      <div class="artifact-case__group artifact-case__group--after">
+        <p class="artifact-case__group-label">Стало</p>
+        <ul class="artifact-case__list">
+          {artifact.caseStudy.afterPoints.map((point) => (
+            <li class="artifact-case__point artifact-case__point--after">{point}</li>
           ))}
         </ul>
       </div>
@@ -69,26 +69,26 @@ function mdInline(s: string): string {
   )}
 
   <a
-    class="btn btn--primary service-card__cta"
-    href={service.cta.href.startsWith('http') ? service.cta.href : withBase(service.cta.href)}
-    aria-label={`${service.cta.label} — ${service.title}`}
-    {...(service.cta.href.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {})}
-    {...(service.ctaGoal ? { onclick: `reachGoal('${service.ctaGoal}')` } : {})}
+    class="btn btn--primary artifact-card__cta"
+    href={artifact.cta.href.startsWith('http') ? artifact.cta.href : withBase(artifact.cta.href)}
+    aria-label={`${artifact.cta.label} — ${artifact.title}`}
+    {...(artifact.cta.href.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {})}
+    {...(artifact.ctaGoal ? { onclick: `reachGoal('${artifact.ctaGoal}')` } : {})}
   >
-    {service.cta.label}
+    {artifact.cta.label}
     <span aria-hidden="true">→</span>
   </a>
 </article>
 
 <style>
-  .service-card {
+  .artifact-card {
     display: flex;
     flex-direction: column;
     height: 100%;
   }
 
   /* Text-only top tag for featured card (replaces emoji badge) */
-  .service-card__top-tag {
+  .artifact-card__top-tag {
     display: inline-block;
     font-family: var(--font-mono);
     font-size: 12px;
@@ -100,7 +100,7 @@ function mdInline(s: string): string {
     /* No background, no border — strict engineering style per spec */
   }
 
-  .service-card__cta {
+  .artifact-card__cta {
     margin-top: auto;
     align-self: flex-start;
     margin-top: 1rem;
@@ -109,7 +109,7 @@ function mdInline(s: string): string {
   }
 
   /* Inline code inside checklist items needs vertical rhythm */
-  .service-card .checklist li {
+  .artifact-card .checklist li {
     padding-top: 0.1rem;
     font-size: 14px;
     color: #374151;
@@ -117,7 +117,7 @@ function mdInline(s: string): string {
     line-height: 1.4;
   }
 
-  .service-card .checklist li:last-child {
+  .artifact-card .checklist li:last-child {
     margin-bottom: 0;
   }
 
@@ -128,7 +128,7 @@ function mdInline(s: string): string {
   /* Real-world case study block (featured card only).
      Per spec: numbers are the main selling element — bigger font,
      bold, subtle bg #f9fafb, padding 16px. */
-  .case-study {
+  .artifact-case {
     margin-top: 1.25rem;
     padding: 16px;
     background: #f9fafb;
@@ -136,7 +136,7 @@ function mdInline(s: string): string {
     border-radius: var(--radius);
   }
 
-  .case-study__title {
+  .artifact-case__title {
     font-family: var(--font-mono);
     font-size: 0.78rem;
     text-transform: uppercase;
@@ -146,15 +146,15 @@ function mdInline(s: string): string {
     margin: 0 0 0.75rem;
   }
 
-  .case-study__group {
+  .artifact-case__group {
     margin-bottom: 0.6rem;
   }
 
-  .case-study__group:last-child {
+  .artifact-case__group:last-child {
     margin-bottom: 0;
   }
 
-  .case-study__group-label {
+  .artifact-case__group-label {
     font-family: var(--font-mono);
     font-size: 0.72rem;
     text-transform: uppercase;
@@ -164,17 +164,17 @@ function mdInline(s: string): string {
     margin: 0 0 0.3rem;
   }
 
-  .case-study__group--after .case-study__group-label {
+  .artifact-case__group--after .artifact-case__group-label {
     color: var(--color-accent);
   }
 
-  .case-study__list {
+  .artifact-case__list {
     list-style: none;
     padding: 0;
     margin: 0;
   }
 
-  .case-study__point {
+  .artifact-case__point {
     position: relative;
     padding-left: 1rem;
     margin-bottom: 0.4rem;
@@ -185,11 +185,11 @@ function mdInline(s: string): string {
     color: var(--color-text-secondary);
   }
 
-  .case-study__point:last-child {
+  .artifact-case__point:last-child {
     margin-bottom: 0;
   }
 
-  .case-study__point::before {
+  .artifact-case__point::before {
     content: '·';
     position: absolute;
     left: 0;
@@ -198,15 +198,15 @@ function mdInline(s: string): string {
     font-weight: 700;
   }
 
-  .case-study__point--before {
+  .artifact-case__point--before {
     color: var(--color-text-secondary);
   }
 
-  .case-study__point--after {
+  .artifact-case__point--after {
     color: var(--color-text);
   }
 
-  .case-study__point--after::before {
+  .artifact-case__point--after::before {
     color: var(--color-accent);
     content: '→';
     font-size: 0.85rem;

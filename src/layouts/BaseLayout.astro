@@ -14,7 +14,7 @@
  *   - skip link, header slot, main slot, footer slot
  */
 import '../styles/global.css';
-import { SITE, CONTACTS, SERVICES, withBase } from '../consts';
+import { SITE, CONTACTS, ARTIFACTS, withBase } from '../consts';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import YandexMetrika from '../components/YandexMetrika.astro';
@@ -72,19 +72,19 @@ const personJsonLd = {
   ],
 };
 
-// JSON-LD: Services (3 items) bundled as ItemList for clarity.
-const servicesJsonLd = {
+// JSON-LD: Artifacts (3 items) bundled as ItemList of Schema.org/Service for clarity.
+const artifactsJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'ItemList',
   name: 'Артефакты и практические кейсы',
-  itemListElement: SERVICES.map((service, index) => ({
+  itemListElement: ARTIFACTS.map((artifact, index) => ({
     '@type': 'ListItem',
     position: index + 1,
     item: {
       '@type': 'Service',
-      name: service.title,
-      serviceType: service.serviceType,
-      description: service.description,
+      name: artifact.title,
+      serviceType: artifact.serviceType,
+      description: artifact.description,
       provider: {
         '@type': 'Person',
         name: 'Дмитрий Синявский',
@@ -92,7 +92,7 @@ const servicesJsonLd = {
         url: 'https://r3code.ru',
       },
       areaServed: 'RU',
-      url: `https://r3code.ru/#${service.id}`,
+      url: `https://r3code.ru/#${artifact.id}`,
     },
   })),
 };
@@ -107,7 +107,7 @@ const websiteJsonLd = {
   author: { '@type': 'Person', name: 'Дмитрий Синявский' },
 };
 
-const jsonLdBlocks = [websiteJsonLd, personJsonLd, servicesJsonLd];
+const jsonLdBlocks = [websiteJsonLd, personJsonLd, artifactsJsonLd];
 ---
 
 <!doctype html>

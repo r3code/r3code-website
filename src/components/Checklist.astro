@@ -1,31 +1,31 @@
 ---
 /**
- * LeadMagnet — checklist CTA section, visually distinct (accent background).
+ * Checklist — checklist CTA section, visually distinct (accent background).
  *
  * Telegram deep link with prefilled message ("AI-чеклист").
  */
-import { LEAD_MAGNET } from '../consts';
+import { CHECKLIST } from '../consts';
 ---
 
-<section class="section section--accent lead-magnet" id="lead-magnet" aria-labelledby="lead-magnet-title">
+<section class="section section--accent checklist" id="checklist" aria-labelledby="checklist-title">
   <div class="container">
-    <div class="lead-magnet__body">
-      <h2 id="lead-magnet-title" class="lead-magnet__title">{LEAD_MAGNET.title}</h2>
-      <p class="lead-magnet__text">{LEAD_MAGNET.body}</p>
+    <div class="checklist__body">
+      <h2 id="checklist-title" class="checklist__title">{CHECKLIST.title}</h2>
+      <p class="checklist__text">{CHECKLIST.body}</p>
 
-      <div class="lead-magnet__cta">
+      <div class="checklist__cta">
         <a
           class="btn btn--ghost btn--lg"
-          href={LEAD_MAGNET.ctaHref}
+          href={CHECKLIST.ctaHref}
           target="_blank"
           rel="noopener"
           onclick="reachGoal('cta_lead_magnet_checklist')"
         >
-          {LEAD_MAGNET.ctaLabel}
+          {CHECKLIST.ctaLabel}
           <span aria-hidden="true">→</span>
         </a>
-        {LEAD_MAGNET.footnote && (
-          <p class="lead-magnet__note">{LEAD_MAGNET.footnote}</p>
+        {CHECKLIST.footnote && (
+          <p class="checklist__note">{CHECKLIST.footnote}</p>
         )}
       </div>
     </div>
@@ -33,26 +33,26 @@ import { LEAD_MAGNET } from '../consts';
 </section>
 
 <style>
-  .lead-magnet__title {
+  .checklist__title {
     font-size: clamp(1.6rem, 1.5vw + 1rem, 2rem);
     margin-bottom: 0.75rem;
   }
 
-  .lead-magnet__text {
+  .checklist__text {
     font-size: 1.05rem;
     color: var(--color-text-secondary);
     max-width: 68ch;
     margin-bottom: 1.5rem;
   }
 
-  .lead-magnet__cta {
+  .checklist__cta {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
     align-items: flex-start;
   }
 
-  .lead-magnet__note {
+  .checklist__note {
     font-size: 0.85rem;
     color: var(--color-text-muted);
     margin: 0;
