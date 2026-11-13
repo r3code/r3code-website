@@ -34,8 +34,6 @@ SKIP_PATTERNS = [
     't.me/sre_pub',
     't.me/gotoit_tg',
     't.me/r3code',  # generic t.me/r3code — not testable by curl
-    # Habr career profile may redirect to login, not a 404 issue
-    'career.habr.com',
 ]
 
 # Some sites refuse HEAD requests, use GET with small range instead

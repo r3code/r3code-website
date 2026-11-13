@@ -62,8 +62,6 @@ export const CONTACTS = {
   githubUrl: 'https://github.com/r3code',
   /** Habr articles URL (list of articles). */
   habrUrl: 'https://habr.com/ru/users/r3code/articles/',
-  /** Habr Career resume URL. */
-  habrCareerUrl: 'https://career.habr.com/dmitriy-sinyavskiy',
   /** LinkedIn profile URL. */
   linkedinUrl: 'https://www.linkedin.com/in/dimasin',
 } as const;
