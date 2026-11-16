@@ -42,7 +42,7 @@ public/                  — статические ассеты (favicon, og-к
 src/
 ├── components/          — Astro-компоненты (scoped styles внутри каждого)
 ├── content/talks/       — Markdown-файлы докладов (по одному на доклад)
-├── content/articles/    — Markdown-файлы статей (внешние с url, внутренние с телом)
+├── content/articles/    — статьи: плоские <slug>.md и папки <slug>/index.md + картинки
 ├── layouts/BaseLayout.astro — корневой <head>, SEO, JSON-LD
 ├── pages/               — маршруты Astro (index, 404, talks/, articles/, privacy/)
 ├── styles/global.css    — design tokens + базовые стили
@@ -83,9 +83,11 @@ docs/                     — детальные документы (progressive
 - **Статьи (`src/content/articles/`)** — два вида: внешние (есть `url`,
   например Habr — открываются в новой вкладке) и внутренние (без `url` —
   детальная страница `/articles/<slug>/`, обязаны иметь Markdown-тело).
-  `tags` обязательны (минимум 1) и не должны содержать корпоративные теги
-  («Ви.Tech») — нарушение роняет `npm run build`. Требования — в
-  [docs/CONTENT.md](docs/CONTENT.md), раздел «Добавить статью».
+  Внутренние с картинками — в папке `<slug>/` с `index.md` и ассетами
+  рядом (относительные пути в теле). В папке допускается только
+  `index.md`. `tags` обязательны (минимум 1) и не должны содержать
+  корпоративные теги («Ви.Tech»). Нарушения роняют `npm run build`.
+  Требования — в [docs/CONTENT.md](docs/CONTENT.md), раздел «Добавить статью».
 
 ## Стиль кода
 

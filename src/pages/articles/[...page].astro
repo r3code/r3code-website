@@ -1,12 +1,11 @@
 ---
 /**
- * /articles/ — articles index (from the `articles` content collection).
+ * /articles/ — articles index with pagination (10 per page).
  */
 import { getCollection } from 'astro:content';
+import type { PaginateFunction, Page } from 'astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { withBase } from '../../consts';
-
-const allArticles = await getCollection('articles');
 
 interface CardItem {
   id: string;
@@ -20,24 +19,39 @@ interface CardItem {
   tags: string[];
 }
 
-const feed: CardItem[] = allArticles
-  .map((article) => {
-    const { data } = article;
-    return {
-      id: article.id,
-      title: data.title,
-      sortDate: data.date,
-      displayDate: data.date.split('-').reverse().join('.'),
-      href: data.url ?? withBase(`articles/${article.id}/`),
-      external: Boolean(data.url),
-      source: data.source ?? 'r3code.ru',
-      teaser: data.teaser,
-      tags: data.tags,
-    };
-  })
-  .sort((a, b) => b.sortDate.localeCompare(a.sortDate));
+export async function getStaticPaths({ paginate }: { paginate: PaginateFunction }) {
+  const feed: CardItem[] = (await getCollection('articles'))
+    .map((article) => {
+      const { data } = article;
+      return {
+        id: article.id,
+        title: data.title,
+        sortDate: data.date,
+        displayDate: data.date.split('-').reverse().join('.'),
+        href: data.url ?? withBase(`articles/${article.id}/`),
+        external: Boolean(data.url),
+        source: data.source ?? 'r3code.ru',
+        teaser: data.teaser,
+        tags: data.tags,
+      };
+    })
+    .sort((a, b) => b.sortDate.localeCompare(a.sortDate));
 
-const title = 'Статьи — Дмитрий Синявский | r3code.ru';
+  return paginate(feed, { pageSize: 10 });
+}
+
+interface Props {
+  page: Page<CardItem>;
+}
+
+const { page } = Astro.props;
+
+const pageHref = (n: number) => (n <= 1 ? withBase('articles/') : withBase(`articles/${n}/`));
+
+const title =
+  page.currentPage > 1
+    ? `Статьи — страница ${page.currentPage} — Дмитрий Синявский | r3code.ru`
+    : 'Статьи — Дмитрий Синявский | r3code.ru';
 const description =
   'Статьи Дмитрия Синявского о SRE, SLO, DevOps и observability: разбор Error Budget Burn Rate, стандартизация логов на Vector.dev и ClickHouse, уроки для IT-инцидентов.';
 ---
@@ -57,10 +71,9 @@ const description =
         </p>
       </header>
 
-      {/* === Feed === */}
       <ul class="article-feed" id="article-feed">
         {
-          feed.map((item) => (
+          page.data.map((item) => (
             <li class="article-item" data-sort-date={item.sortDate}>
               <div class="article-item__type-row">
                 <span class="article-item__type">Статья</span>
@@ -126,6 +139,34 @@ const description =
           ))
         }
       </ul>
+
+      {page.lastPage > 1 && (
+        <nav class="articles-pagination" aria-label="Пагинация по статьям">
+          {page.currentPage > 1 ? (
+            <a class="articles-pagination__link" href={pageHref(page.currentPage - 1)}>
+              <span aria-hidden="true">←</span> Новее
+            </a>
+          ) : (
+            <span class="articles-pagination__link articles-pagination__link--disabled">
+              <span aria-hidden="true">←</span> Новее
+            </span>
+          )}
+
+          <span class="articles-pagination__info">
+            Страница {page.currentPage} из {page.lastPage}
+          </span>
+
+          {page.currentPage < page.lastPage ? (
+            <a class="articles-pagination__link" href={pageHref(page.currentPage + 1)}>
+              Старее <span aria-hidden="true">→</span>
+            </a>
+          ) : (
+            <span class="articles-pagination__link articles-pagination__link--disabled">
+              Старее <span aria-hidden="true">→</span>
+            </span>
+          )}
+        </nav>
+      )}
     </div>
   </article>
 </BaseLayout>
@@ -289,6 +330,39 @@ const description =
 
   .article-item__open:hover {
     text-decoration: underline;
+  }
+
+  /* === Pagination === */
+  .articles-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .articles-pagination__link {
+    color: var(--color-accent);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+  }
+
+  .articles-pagination__link:hover {
+    text-decoration: underline;
+  }
+
+  .articles-pagination__link--disabled {
+    color: var(--color-text-muted);
+    font-weight: 400;
+  }
+
+  .articles-pagination__info {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--color-text-muted);
   }
 
   @media (max-width: 540px) {

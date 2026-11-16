@@ -8,6 +8,7 @@
  */
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { posix } from 'node:path';
 
 const talks = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/talks' }),
@@ -65,7 +66,18 @@ const talks = defineCollection({
 });
 
 const articles = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: './src/content/articles' }),
+  loader: glob({
+    pattern: '**/*.md',
+    base: './src/content/articles',
+    generateId: ({ entry }) => {
+      if (entry.includes('/') && posix.basename(entry) !== 'index.md') {
+        throw new Error(
+          `В папке статьи допускается только index.md (найдено: "${entry}"). Картинки и другие файлы кладите рядом с index.md. См. docs/CONTENT.md.`,
+        );
+      }
+      return entry.replace(/\.md$/, '').replace(/\/index$/, '');
+    },
+  }),
   schema: z.object({
     /** Article title. */
     title: z.string(),
