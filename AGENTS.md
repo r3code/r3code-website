@@ -42,8 +42,9 @@ public/                  — статические ассеты (favicon, og-к
 src/
 ├── components/          — Astro-компоненты (scoped styles внутри каждого)
 ├── content/talks/       — Markdown-файлы докладов (по одному на доклад)
+├── content/articles/    — Markdown-файлы статей (внешние с url, внутренние с телом)
 ├── layouts/BaseLayout.astro — корневой <head>, SEO, JSON-LD
-├── pages/               — маршруты Astro (index, 404, talks/)
+├── pages/               — маршруты Astro (index, 404, talks/, articles/, privacy/)
 ├── styles/global.css    — design tokens + базовые стили
 └── consts.ts            — единственный источник правды: контакты, услуги, кейсы
 scripts/                  — утилиты (contrast checker, external link checker,
@@ -57,7 +58,7 @@ docs/                     — детальные документы (progressive
 | Что нужно | Куда смотреть |
 |---|---|
 | Стиль кода, UI, копирайтинга | [docs/STYLE.md](docs/STYLE.md) |
-| Как добавить доклад / услугу / кейс | [docs/CONTENT.md](docs/CONTENT.md) |
+| Как добавить доклад / статью / услугу / кейс | [docs/CONTENT.md](docs/CONTENT.md) |
 | SEO, мета-теги, JSON-LD, sitemap | [docs/SEO.md](docs/SEO.md) |
 | WCAG AA, как пользоваться contrast-checker'ом | [docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md) |
 | Деплой, GitHub Actions, откат | [docs/DEPLOY.md](docs/DEPLOY.md) |
@@ -65,8 +66,9 @@ docs/                     — детальные документы (progressive
 
 ## Ключевые принципы
 
-- **Контент — в `src/consts.ts` и `src/content/talks/*.md`**. Не размазывай
-  тексты по компонентам. Все контакты, услуги, кейсы, конференции — в `consts.ts`.
+- **Контент — в `src/consts.ts`, `src/content/talks/*.md` и
+  `src/content/articles/*.md`**. Не размазывай тексты по компонентам. Все
+  контакты, услуги, кейсы, конференции — в `consts.ts`.
 - **Цвета — через CSS custom properties** из `:root` в `global.css`. Не
   хардкодь hex в компонентах. Если меняешь токен — обнови
   `scripts/contrast-pairs.json` и прогони контраст-чекер.
@@ -75,8 +77,15 @@ docs/                     — детальные документы (progressive
 - **Zero JS по умолчанию**. Astro рендерит статику. JS добавляем только когда
   без него нельзя (фильтр на `/talks/`, retina `srcset`).
 - **Никаких внешних форм**. CTA ведут на Telegram / GetMentor / Habr Career.
-- **Markdown в `talks/`** рендерится через `astro:content` + `render(talk)`.
-  Не используй `set:html={body}` — это рендерит сырой Markdown как текст.
+- **Markdown в `talks/` и `articles/`** рендерится через `astro:content` +
+  `render(entry)`. Не используй `set:html={body}` — это рендерит сырой
+  Markdown как текст.
+- **Статьи (`src/content/articles/`)** — два вида: внешние (есть `url`,
+  например Habr — открываются в новой вкладке) и внутренние (без `url` —
+  детальная страница `/articles/<slug>/`, обязаны иметь Markdown-тело).
+  `tags` обязательны (минимум 1) и не должны содержать корпоративные теги
+  («Ви.Tech») — нарушение роняет `npm run build`. Требования — в
+  [docs/CONTENT.md](docs/CONTENT.md), раздел «Добавить статью».
 
 ## Стиль кода
 
@@ -84,7 +93,7 @@ docs/                     — детальные документы (progressive
 - Astro-компоненты — scoped styles внутри `<style>` тега.
 - Именование классов — БЭМ-подобное: `block__element--modifier`.
 - Имена файлов компонентов — PascalCase (Hero.astro, ArtifactCard.astro).
-- Имена контент-файлов в `talks/` — kebab-case (slo-tricks.md).
+- Имена контент-файлов в `talks/` и `articles/` — kebab-case (slo-tricks.md).
 - Коммиты — conventional-commits на русском: `Fix: …`, `Add: …`, `Update: …`.
 
 ## Деплой

@@ -21,8 +21,9 @@ public/                   — статика (favicon, og.jpg, robots.txt)
 src/
 ├── components/           — Astro-компоненты (scoped styles)
 ├── content/talks/        — Markdown-файлы докладов
+├── content/articles/     — Markdown-файлы статей (Habr и внутренние)
 ├── layouts/BaseLayout.astro — <head>, SEO, JSON-LD, Metrika
-├── pages/               — маршруты (index, 404, talks/, privacy/)
+├── pages/               — маршруты (index, 404, talks/, articles/, privacy/)
 ├── styles/global.css    — design tokens + базовые стили
 └── consts.ts            — единый источник данных
 scripts/                  — утилиты (contrast, links, OG generation)
@@ -53,7 +54,8 @@ Node 20+.
 ## Контент
 
 Все контакты, чек-лист, конференции, инструменты — в `src/consts.ts`.
-Доклады — в `src/content/talks/*.md` (Markdown + YAML frontmatter).
+Доклады — в `src/content/talks/*.md`, статьи — в `src/content/articles/*.md`
+(Markdown + YAML frontmatter; внешние с `url`, внутренние с телом).
 
 Подробности: [docs/CONTENT.md](docs/CONTENT.md), [docs/STYLE.md](docs/STYLE.md).
 

@@ -1,0 +1,328 @@
+---
+/**
+ * /articles/ — articles index.
+ *
+ * Reads from the `articles` content collection (Markdown files in
+ * src/content/articles/). Two kinds of entries:
+ *   - external (`url` set): card title and «Открыть статью» link open
+ *     the external URL in a new tab;
+ *   - internal (no `url`): card links to /articles/<slug>/ (same tab),
+ *     detail page renders the Markdown body.
+ *
+ * Layout mirrors /talks/: back link, header, chronological feed of
+ * cards (newest first). Tags are shown as chips in the card meta row.
+ */
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { withBase } from '../../consts';
+
+const allArticles = await getCollection('articles');
+
+interface CardItem {
+  /** Unique key. */
+  id: string;
+  title: string;
+  /** ISO date for sorting. */
+  sortDate: string;
+  /** DD.MM.YYYY display date. */
+  displayDate: string;
+  /** External URL — opens in a new tab; omit for internal detail page. */
+  url?: string;
+  /** Source platform label ("Habr", "r3code.ru"). */
+  source: string;
+  teaser: string;
+  tags: string[];
+  /** Detail page link (internal articles only; externals omit it). */
+  detailUrl?: string;
+}
+
+// ISO → DD.MM.YYYY (explicit format, no locale surprises).
+const formatDisplayDate = (iso: string) => iso.split('-').reverse().join('.');
+
+const feed: CardItem[] = allArticles
+  .map((article) => {
+    const data = article.data;
+    const internal = !data.url;
+    return {
+      id: article.id,
+      title: data.title,
+      sortDate: data.date,
+      displayDate: formatDisplayDate(data.date),
+      url: data.url,
+      source: data.source ?? (internal ? 'r3code.ru' : data.url ? new URL(data.url).hostname : 'r3code.ru'),
+      teaser: data.teaser,
+      tags: data.tags,
+      detailUrl: internal ? withBase(`articles/${article.id}/`) : undefined,
+    };
+  })
+  // Newest first.
+  .sort((a, b) => b.sortDate.localeCompare(a.sortDate));
+
+const title = 'Статьи — Дмитрий Синявский | r3code.ru';
+const description =
+  'Статьи Дмитрия Синявского о SRE, SLO, DevOps и observability: разбор Error Budget Burn Rate, стандартизация логов на Vector.dev и ClickHouse, уроки для IT-инцидентов.';
+---
+
+<BaseLayout title={title} description={description}>
+  <article class="section articles-index">
+    <div class="container articles-index__inner">
+      <a href={withBase('')} class="articles-index__back">
+        <span aria-hidden="true">←</span> На главную
+      </a>
+
+      <header class="articles-index__head">
+        <h1>Статьи</h1>
+        <p class="articles-index__lead">
+          Публикации о SRE, observability и инженерных практиках — на Habr
+          и на этом сайте. Для каждой — дата публикации и теги.
+        </p>
+      </header>
+
+      {/* === Feed === */}
+      <ul class="article-feed" id="article-feed">
+        {
+          feed.map((item) => (
+            <li class="article-item" data-sort-date={item.sortDate}>
+              <div class="article-item__type-row">
+                <span class="article-item__type">Статья</span>
+                <span class="article-item__date">{item.displayDate}</span>
+              </div>
+
+              <h2 class="article-item__title">
+                {item.url ? (
+                  <a
+                    href={item.url}
+                    target="_blank"
+                    rel="noopener"
+                    onclick="reachGoal('click_article_external')"
+                  >
+                    {item.title} <span aria-hidden="true">↗</span>
+                  </a>
+                ) : (
+                  <a href={item.detailUrl}>{item.title}</a>
+                )}
+              </h2>
+
+              <p class="article-item__source">
+                {item.url ? (
+                  <a
+                    href={item.url}
+                    target="_blank"
+                    rel="noopener"
+                    onclick="reachGoal('click_article_external')"
+                  >
+                    {item.source}
+                  </a>
+                ) : (
+                  item.source
+                )}
+              </p>
+
+              <p class="article-item__teaser">{item.teaser}</p>
+
+              <div class="article-item__meta">
+                <ul class="article-item__tags">
+                  {item.tags.map((tag) => (
+                    <li class="article-item__tag">{tag}</li>
+                  ))}
+                </ul>
+
+                {item.url ? (
+                  <a
+                    class="article-item__open"
+                    href={item.url}
+                    target="_blank"
+                    rel="noopener"
+                    onclick="reachGoal('click_article_external')"
+                  >
+                    Открыть статью <span aria-hidden="true">↗</span>
+                  </a>
+                ) : (
+                  <a class="article-item__open" href={item.detailUrl}>
+                    Открыть статью <span aria-hidden="true">→</span>
+                  </a>
+                )}
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .articles-index__inner {
+    max-width: 920px;
+  }
+
+  .articles-index__back {
+    display: inline-block;
+    margin-bottom: 2rem;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+
+  .articles-index__back:hover {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  .articles-index__head {
+    margin-bottom: 2rem;
+  }
+
+  .articles-index__head h1 {
+    font-size: clamp(1.9rem, 2vw + 1rem, 2.5rem);
+    margin-bottom: 0.75rem;
+  }
+
+  .articles-index__lead {
+    color: var(--color-text-secondary);
+    font-size: 1.05rem;
+    max-width: 60ch;
+  }
+
+  /* === Feed (mirrors /talks/ feed-item) === */
+  .article-feed {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .article-item {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    transition: border-color var(--t-fast), box-shadow var(--t-fast);
+  }
+
+  .article-item:hover {
+    border-color: var(--color-accent);
+    box-shadow: 0 2px 8px rgba(0, 102, 255, 0.04);
+  }
+
+  .article-item__type-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.6rem;
+    flex-wrap: wrap;
+  }
+
+  .article-item__type {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+    border: 1px solid var(--color-accent-border);
+  }
+
+  .article-item__date {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+    margin-left: auto;
+  }
+
+  .article-item__title {
+    font-size: 1.15rem;
+    line-height: 1.3;
+    margin: 0 0 0.4rem;
+    font-weight: 600;
+  }
+
+  .article-item__title a {
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  .article-item__title a:hover {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  .article-item__source {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--color-accent);
+    margin: 0 0 0.5rem;
+  }
+
+  .article-item__source a {
+    text-decoration: none;
+  }
+
+  .article-item__source a:hover {
+    text-decoration: underline;
+  }
+
+  .article-item__teaser {
+    color: var(--color-text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0 0 0.5rem;
+  }
+
+  .article-item__meta {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    margin-top: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .article-item__tags {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    padding: 0;
+    margin: 0;
+  }
+
+  .article-item__tag {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+    background: var(--color-bg-muted);
+    padding: 0.1rem 0.45rem;
+    border-radius: 4px;
+    border: 1px solid var(--color-border);
+  }
+
+  .article-item__open {
+    margin-left: auto;
+    font-weight: 600;
+    font-size: 0.88rem;
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  .article-item__open:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 540px) {
+    .article-item {
+      padding: 0.85rem 1rem;
+    }
+
+    .article-item__date {
+      margin-left: 0;
+    }
+
+    .article-item__open {
+      margin-left: 0;
+    }
+  }
+</style>
