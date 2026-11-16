@@ -1,16 +1,6 @@
 ---
 /**
- * /articles/ — articles index.
- *
- * Reads from the `articles` content collection (Markdown files in
- * src/content/articles/). Two kinds of entries:
- *   - external (`url` set): card title and «Открыть статью» link open
- *     the external URL in a new tab;
- *   - internal (no `url`): card links to /articles/<slug>/ (same tab),
- *     detail page renders the Markdown body.
- *
- * Layout mirrors /talks/: back link, header, chronological feed of
- * cards (newest first). Tags are shown as chips in the card meta row.
+ * /articles/ — articles index (from the `articles` content collection).
  */
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -19,43 +9,32 @@ import { withBase } from '../../consts';
 const allArticles = await getCollection('articles');
 
 interface CardItem {
-  /** Unique key. */
   id: string;
   title: string;
-  /** ISO date for sorting. */
   sortDate: string;
-  /** DD.MM.YYYY display date. */
   displayDate: string;
-  /** External URL — opens in a new tab; omit for internal detail page. */
-  url?: string;
-  /** Source platform label ("Habr", "r3code.ru"). */
+  href: string;
+  external: boolean;
   source: string;
   teaser: string;
   tags: string[];
-  /** Detail page link (internal articles only; externals omit it). */
-  detailUrl?: string;
 }
-
-// ISO → DD.MM.YYYY (explicit format, no locale surprises).
-const formatDisplayDate = (iso: string) => iso.split('-').reverse().join('.');
 
 const feed: CardItem[] = allArticles
   .map((article) => {
-    const data = article.data;
-    const internal = !data.url;
+    const { data } = article;
     return {
       id: article.id,
       title: data.title,
       sortDate: data.date,
-      displayDate: formatDisplayDate(data.date),
-      url: data.url,
-      source: data.source ?? (internal ? 'r3code.ru' : data.url ? new URL(data.url).hostname : 'r3code.ru'),
+      displayDate: data.date.split('-').reverse().join('.'),
+      href: data.url ?? withBase(`articles/${article.id}/`),
+      external: Boolean(data.url),
+      source: data.source ?? 'r3code.ru',
       teaser: data.teaser,
       tags: data.tags,
-      detailUrl: internal ? withBase(`articles/${article.id}/`) : undefined,
     };
   })
-  // Newest first.
   .sort((a, b) => b.sortDate.localeCompare(a.sortDate));
 
 const title = 'Статьи — Дмитрий Синявский | r3code.ru';
@@ -89,9 +68,9 @@ const description =
               </div>
 
               <h2 class="article-item__title">
-                {item.url ? (
+                {item.external ? (
                   <a
-                    href={item.url}
+                    href={item.href}
                     target="_blank"
                     rel="noopener"
                     onclick="reachGoal('click_article_external')"
@@ -99,14 +78,14 @@ const description =
                     {item.title} <span aria-hidden="true">↗</span>
                   </a>
                 ) : (
-                  <a href={item.detailUrl}>{item.title}</a>
+                  <a href={item.href}>{item.title}</a>
                 )}
               </h2>
 
               <p class="article-item__source">
-                {item.url ? (
+                {item.external ? (
                   <a
-                    href={item.url}
+                    href={item.href}
                     target="_blank"
                     rel="noopener"
                     onclick="reachGoal('click_article_external')"
@@ -127,10 +106,10 @@ const description =
                   ))}
                 </ul>
 
-                {item.url ? (
+                {item.external ? (
                   <a
                     class="article-item__open"
-                    href={item.url}
+                    href={item.href}
                     target="_blank"
                     rel="noopener"
                     onclick="reachGoal('click_article_external')"
@@ -138,7 +117,7 @@ const description =
                     Открыть статью <span aria-hidden="true">↗</span>
                   </a>
                 ) : (
-                  <a class="article-item__open" href={item.detailUrl}>
+                  <a class="article-item__open" href={item.href}>
                     Открыть статью <span aria-hidden="true">→</span>
                   </a>
                 )}
@@ -184,7 +163,7 @@ const description =
     max-width: 60ch;
   }
 
-  /* === Feed (mirrors /talks/ feed-item) === */
+  /* === Feed === */
   .article-feed {
     list-style: none;
     padding: 0;

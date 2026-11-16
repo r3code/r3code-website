@@ -1,14 +1,6 @@
 ---
 /**
- * /articles/<slug>/ — internal article detail page.
- *
- * Only generated for articles WITHOUT an external `url` (external ones
- * open on Habr in a new tab directly from /articles/).
- *
- * Design mirrors the talk detail page (/talks/<slug>/) with two changes:
- *   - first meta line: «Статья · DD.MM.YYYY» (publication date instead of
- *     venue + conference year);
- *   - tags row instead of audience ratings.
+ * /articles/<slug>/ — internal article page (articles without an external url).
  */
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -19,8 +11,6 @@ export async function getStaticPaths() {
     (article) => !article.data.url,
   );
 
-  // Build-time guard: an internal article must have a Markdown body
-  // (documented in docs/CONTENT.md).
   for (const article of internalArticles) {
     if (!article.body || !article.body.trim()) {
       throw new Error(
@@ -43,7 +33,6 @@ const { article } = Astro.props;
 const { title, date, teaser, tags } = article.data;
 const { Content } = await render(article);
 
-// ISO → DD.MM.YYYY (explicit format, no locale surprises).
 const displayDate = date.split('-').reverse().join('.');
 
 const seoTitle = `${title} — статья | r3code.ru`;
@@ -67,13 +56,9 @@ const seoDescription = teaser;
         <h1>{title}</h1>
 
         <ul class="article-detail__tags">
-          {
-            tags.map((tag) => (
-              <li class="article-detail__tag">
-                <a href={withBase('articles/')}>#{tag}</a>
-              </li>
-            ))
-          }
+          {tags.map((tag) => (
+            <li class="article-detail__tag">{tag}</li>
+          ))}
         </ul>
 
         {teaser && <p class="article-detail__teaser">{teaser}</p>}
@@ -148,7 +133,7 @@ const seoDescription = teaser;
     color: var(--color-border-strong);
   }
 
-  /* Tags row — replaces the rating line of the talk detail page. */
+  /* Tags row */
   .article-detail__tags {
     list-style: none;
     display: flex;
@@ -168,16 +153,6 @@ const seoDescription = teaser;
     border: 1px solid var(--color-border);
   }
 
-  .article-detail__tag a {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  .article-detail__tag a:hover {
-    color: var(--color-accent);
-    text-decoration: none;
-  }
-
   .article-detail__teaser {
     font-size: 1.05rem;
     color: var(--color-text-secondary);
@@ -185,7 +160,7 @@ const seoDescription = teaser;
     line-height: 1.6;
   }
 
-  /* Markdown body — same typography as talk detail. */
+  /* Markdown body */
   .article-detail__body {
     color: var(--color-text-secondary);
     font-size: 1.05rem;
@@ -234,7 +209,7 @@ const seoDescription = teaser;
     font-weight: 600;
   }
 
-  /* CTA block — same as talk detail. */
+  /* CTA block */
   .article-detail__cta {
     margin-top: 2.5rem;
     padding: 1.5rem;

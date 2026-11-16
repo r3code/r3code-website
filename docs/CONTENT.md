@@ -35,7 +35,7 @@
 title: 'SLI/SLO. Что такое Error Budget Burn Rate на самом деле'
 date: '2026-04-27'      # ISO YYYY-MM-DD — сортировка и вывод DD.MM.YYYY
 url: 'https://habr.com/ru/articles/1028008/'
-source: 'Habr'          # метка площадки на карточке (опционально)
+source: 'Habr'          # метка площадки на карточке; по умолчанию — r3code.ru
 teaser: 'Одно-два предложения для карточки.'
 tags: ['DevOps', 'Терминология IT']
 ---
