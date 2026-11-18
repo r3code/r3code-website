@@ -137,6 +137,9 @@ const filterChips: { type: ItemType | 'all'; label: string; count: number }[] = 
   { type: 'ambassador', label: 'Амбассадор', count: typeCounts.ambassador },
 ];
 
+// Hide chips for types with no items («Анонсы 0» pollutes the filter row).
+const visibleChips = filterChips.filter((c) => c.type === 'all' || c.count > 0);
+
 const title = 'Доклады, круглые столы и подкасты — Дмитрий Синявский | r3code.ru';
 const description =
   'Доклады и круглые столы Дмитрия Синявского на DevOpsConf, SaintHighLoad, HardFest, Observability Conf и Стачка: SLO, Vector+ClickHouse, AI-Ready Observability. Ссылки на видео и презентации.';
@@ -161,7 +164,7 @@ const description =
       {/* === Filter chips === */}
       <div class="filter-chips" role="tablist" aria-label="Фильтр по типу контента">
         {
-          filterChips.map((chip) => (
+          visibleChips.map((chip) => (
             <button
               type="button"
               class="filter-chip"

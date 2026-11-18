@@ -139,8 +139,10 @@ export const PC_MEMBERSHIPS = [
 ] as const;
 
 /**
- * Talks announced but without a full detail page yet (no video / no abstract
- * of their own). Shown on /talks/ in a separate "Анонсы" section.
+ * Talks announced but without a full detail page yet (no video / no slides
+ * of their own). Shown on /talks/ in the chronological feed with the
+ * «Анонс» badge. See docs/CONTENT.md for the card style and the
+ * announcement → talk conversion process.
  */
 export interface TalkAnnouncement {
   title: string;
@@ -151,16 +153,7 @@ export interface TalkAnnouncement {
   url?: string;
 }
 
-export const TALKS_ANNOUNCED: TalkAnnouncement[] = [
-  {
-    title: 'Как мы сократили стоимость хранения логов в 3 раза с ClickHouse и Vector',
-    venue: 'Moscow Tech Week 2026',
-    year: 2026,
-    date: '2026-11-18',
-    url: 'https://techweek.moscow',
-    note: '18 ноября 2026, 14:20–14:55, Москва. Запланированный доклад.',
-  },
-];
+export const TALKS_ANNOUNCED: TalkAnnouncement[] = [];
 
 /** Ambassador activities (not talks, but public community presence). */
 export const AMBASSADOR_ACTIVITIES = [
